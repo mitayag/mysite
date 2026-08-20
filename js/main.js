@@ -407,4 +407,39 @@
       }
     });
   }
+
+  /* ---------- Lock pop-up: gated content before the game ---------- */
+  const lockModal = document.getElementById("lockModal");
+  const lockModalPlay = document.getElementById("lockModalPlay");
+  const lockModalClose = document.getElementById("lockModalClose");
+  const lockBackdrop = lockModal ? lockModal.querySelector(".lock-modal-backdrop") : null;
+
+  function showLockModal() {
+    if (lockModal) lockModal.hidden = false;
+  }
+  function hideLockModal() {
+    if (lockModal) lockModal.hidden = true;
+  }
+  if (lockModal) {
+    if (lockModalPlay) {
+      lockModalPlay.addEventListener("click", () => {
+        hideLockModal();
+        const home = document.getElementById("home");
+        if (home) home.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+    if (lockModalClose) lockModalClose.addEventListener("click", hideLockModal);
+    if (lockBackdrop) lockBackdrop.addEventListener("click", hideLockModal);
+  }
+
+  // Intercept nav links (and the scroll cue) while the page is still locked
+  document.querySelectorAll(".nav-links a[href^='#'], .scroll-cue").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      if (a.getAttribute("href") === "#home") return;
+      if (document.body.classList.contains("locked")) {
+        e.preventDefault();
+        showLockModal();
+      }
+    });
+  });
 })();

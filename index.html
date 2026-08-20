@@ -34,6 +34,18 @@
     </div>
   </div>
 
+  <!-- Lock pop-up: shown when a visitor clicks gated content before playing -->
+  <div class="lock-modal" id="lockModal" hidden>
+    <div class="lock-modal-backdrop" data-close></div>
+    <div class="lock-modal-card" role="dialog" aria-modal="true" aria-labelledby="lockModalTitle">
+      <button class="lock-modal-close" id="lockModalClose" type="button" aria-label="Close">×</button>
+      <div class="lock-modal-icon" aria-hidden="true">🔒</div>
+      <h3 id="lockModalTitle">Access locked</h3>
+      <p>Complete the hack challenge first to unlock the full site.</p>
+      <button class="btn btn-primary" id="lockModalPlay" type="button">Play the game <span class="arrow">→</span></button>
+    </div>
+  </div>
+
   <!-- ================= NAVIGATION =================
        EDIT: add/remove/reorder menu items here.
        Each link href="#..." must match a section id below. -->

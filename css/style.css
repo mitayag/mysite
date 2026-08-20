@@ -883,6 +883,43 @@ html.js body.locked .footer { display: none; }
   75% { transform: translate(-3px, 1px); }
 }
 
+/* ---------- Lock pop-up (gated content) ---------- */
+.lock-modal[hidden] { display: none; }
+.lock-modal {
+  position: fixed; inset: 0; z-index: 1001;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.lock-modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(3, 5, 11, .82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.lock-modal-card {
+  position: relative; z-index: 1;
+  max-width: 420px; width: 100%;
+  background: linear-gradient(180deg, var(--card), var(--card-2));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 32px 28px 28px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  animation: cardIn .3s ease both;
+}
+.lock-modal-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 10px; }
+.lock-modal-card h3 {
+  font-family: var(--font-head); font-size: 1.4rem;
+  color: #fff; margin-bottom: 8px;
+}
+.lock-modal-card p { color: var(--muted); font-size: .95rem; margin-bottom: 22px; }
+.lock-modal-close {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: 0; color: var(--muted-2);
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.lock-modal-close:hover { color: var(--accent); }
+
 @media (max-width: 720px) {
   .replay-btn span { display: none; }
   .bootlog { min-height: 110px; }
