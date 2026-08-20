@@ -667,7 +667,10 @@
   function finishCtf() {
     ctfElapsed = ctfStartTime ? Math.max(1, Math.round((Date.now() - ctfStartTime) / 1000)) : null;
     if (ctfTime) ctfTime.textContent = ctfElapsed ? formatTime(ctfElapsed) : "--";
-    if (leaderboardSubmit) leaderboardSubmit.hidden = false;
+    if (leaderboardSubmit) {
+      leaderboardSubmit.hidden = false;
+      setTimeout(() => leaderboardSubmit.scrollIntoView({ behavior: "smooth", block: "center" }), 350);
+    }
   }
 
   function formatTime(s) {
@@ -710,7 +713,13 @@
         if (lbFeedback) { lbFeedback.textContent = "Enter a handle first."; lbFeedback.className = "ctf-feedback err"; }
         return;
       }
-      if (!LEADERBOARD_READY || ctfElapsed == null) return;
+      if (!LEADERBOARD_READY) {
+        if (lbFeedback) { lbFeedback.textContent = "Leaderboard isn't connected yet."; lbFeedback.className = "ctf-feedback err"; }
+        return;
+      }
+      if (ctfElapsed == null) {
+        ctfElapsed = ctfStartTime ? Math.max(1, Math.round((Date.now() - ctfStartTime) / 1000)) : 1;
+      }
       lbSave.disabled = true;
       if (lbFeedback) { lbFeedback.textContent = "Saving…"; lbFeedback.className = "ctf-feedback"; }
       try {
