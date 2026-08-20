@@ -28,6 +28,7 @@
   /* ---------- Sound effects (Web Audio — no files needed) ---------- */
   const Sound = (() => {
     let ctx = null;
+    let master = null;
     let muted = false;
     try { muted = localStorage.getItem("soundMuted") === "1"; } catch (e) {}
 
@@ -35,6 +36,11 @@
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return null;
       if (!ctx) ctx = new AC();
+      if (!master) {
+        master = ctx.createGain();
+        master.gain.value = 2.0; // master volume boost
+        master.connect(ctx.destination);
+      }
       if (ctx.state === "suspended") ctx.resume();
       return ctx;
     }
@@ -52,7 +58,7 @@
       g.gain.exponentialRampToValueAtTime(vol || 0.14, t + 0.01);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       o.connect(g);
-      g.connect(c.destination);
+      g.connect(master);
       o.start(t);
       o.stop(t + dur + 0.03);
     }
@@ -75,7 +81,7 @@
       const g = c.createGain();
       g.gain.setValueAtTime(vol || 0.1, t);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      src.connect(f); f.connect(g); g.connect(c.destination);
+      src.connect(f); f.connect(g); g.connect(master);
       src.start(t);
     }
 
