@@ -588,6 +588,11 @@
   const lbSave = document.getElementById("lbSave");
   const lbFeedback = document.getElementById("lbFeedback");
   const lbBody = document.getElementById("lbBody");
+  const lbPagination = document.getElementById("lbPagination");
+  const showWinnersBtn = document.getElementById("showWinnersBtn");
+  const winnersModal = document.getElementById("winnersModal");
+  const winnersClose = document.getElementById("winnersClose");
+  const podium = document.getElementById("podium");
   let ctfSolved = 0;
   let ctfStartTime = null;
   let ctfElapsed = null;
@@ -681,30 +686,156 @@
     return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
+  const PAGE_SIZE = 5;
+  let leaderboardRows = [];
+  let currentPage = 1;
+
+  function computePoints(flags, time) {
+    return Math.max(0, (flags || 0) * 300 - (time || 0) * 2);
+  }
+
+  function sortRows(rows) {
+    return rows.slice().sort((a, b) => {
+      const pa = computePoints(a.flags_solved, a.time_seconds);
+      const pb = computePoints(b.flags_solved, b.time_seconds);
+      if (pb !== pa) return pb - pa;                       // points desc
+      if (a.time_seconds !== b.time_seconds) return a.time_seconds - b.time_seconds; // time asc
+      return String(a.name || "").localeCompare(String(b.name || "")); // name asc
+    });
+  }
+
+  function renderLeaderboard() {
+    if (!lbBody) return;
+    const totalPages = Math.max(1, Math.ceil(leaderboardRows.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const page = leaderboardRows.slice(start, start + PAGE_SIZE);
+
+    if (!leaderboardRows.length) {
+      lbBody.innerHTML = '<tr><td colspan="5" class="lb-empty">No scores yet — be the first!</td></tr>';
+      return;
+    }
+    lbBody.innerHTML = page
+      .map((r, i) => {
+        const rank = start + i + 1;
+        const pts = computePoints(r.flags_solved, r.time_seconds);
+        return "<tr><td>" + rank + "</td><td>" + escapeHtml(r.name) + "</td><td>" +
+          formatTime(r.time_seconds) + "</td><td>" + r.flags_solved + "/5</td><td>" +
+          pts.toLocaleString() + "</td></tr>";
+      })
+      .join("");
+  }
+
+  function renderPagination() {
+    if (!lbPagination) return;
+    const totalPages = Math.max(1, Math.ceil(leaderboardRows.length / PAGE_SIZE));
+    if (totalPages <= 1) {
+      lbPagination.innerHTML = "";
+      return;
+    }
+    let html = '<button class="pg-btn" data-page="prev" type="button"' + (currentPage === 1 ? " disabled" : "") + ">‹ Previous</button>";
+    for (let p = 1; p <= totalPages; p++) {
+      html += '<button class="pg-btn' + (p === currentPage ? " active" : "") + '" data-page="' + p + '" type="button">' + p + "</button>";
+    }
+    html += '<button class="pg-btn" data-page="next" type="button"' + (currentPage === totalPages ? " disabled" : "") + ">Next ›</button>";
+    lbPagination.innerHTML = html;
+
+    lbPagination.querySelectorAll(".pg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const p = btn.dataset.page;
+        if (p === "prev") goToPage(currentPage - 1);
+        else if (p === "next") goToPage(currentPage + 1);
+        else goToPage(parseInt(p, 10));
+      });
+    });
+  }
+
+  function goToPage(p) {
+    const totalPages = Math.max(1, Math.ceil(leaderboardRows.length / PAGE_SIZE));
+    currentPage = Math.max(1, Math.min(totalPages, p));
+    renderLeaderboard();
+    renderPagination();
+  }
+
   async function loadLeaderboard() {
     if (!lbBody) return;
     if (!LEADERBOARD_READY) {
-      lbBody.innerHTML = '<tr><td colspan="4" class="lb-empty">Leaderboard not connected — add your Supabase keys in js/main.js.</td></tr>';
+      lbBody.innerHTML = '<tr><td colspan="5" class="lb-empty">Leaderboard not connected — add your Supabase keys in js/main.js.</td></tr>';
+      if (lbPagination) lbPagination.innerHTML = "";
       return;
     }
     try {
       const res = await fetch(
-        SUPABASE_URL + "/rest/v1/" + LEADERBOARD_TABLE + "?select=name,time_seconds,flags_solved&order=time_seconds.asc&limit=10",
+        SUPABASE_URL + "/rest/v1/" + LEADERBOARD_TABLE + "?select=name,time_seconds,flags_solved&limit=1000",
         { headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY } }
       );
       if (!res.ok) throw new Error("HTTP " + res.status);
-      const rows = await res.json();
-      if (!rows.length) {
-        lbBody.innerHTML = '<tr><td colspan="4" class="lb-empty">No scores yet — be the first!</td></tr>';
-        return;
-      }
-      lbBody.innerHTML = rows
-        .map((r, i) => "<tr><td>" + (i + 1) + "</td><td>" + escapeHtml(r.name) + "</td><td>" + formatTime(r.time_seconds) + "</td><td>" + r.flags_solved + "/5</td></tr>")
-        .join("");
+      leaderboardRows = sortRows(await res.json());
+      currentPage = 1;
+      renderLeaderboard();
+      renderPagination();
     } catch (e) {
-      lbBody.innerHTML = '<tr><td colspan="4" class="lb-empty">Couldn\'t load the leaderboard.</td></tr>';
+      lbBody.innerHTML = '<tr><td colspan="5" class="lb-empty">Couldn\'t load the leaderboard.</td></tr>';
+      if (lbPagination) lbPagination.innerHTML = "";
     }
   }
+
+  /* ---------- Winners modal (top 3 podium) ---------- */
+  function renderPodium() {
+    if (!podium) return;
+    const top = leaderboardRows.slice(0, 3);
+    if (!top.length) {
+      podium.innerHTML = '<p class="podium-empty">No winners yet — be the first to finish!</p>';
+      return;
+    }
+    const byRank = {};
+    top.forEach((r, i) => { byRank[i + 1] = r; });
+    const labels = { 1: "CHAMPION", 2: "SECOND", 3: "THIRD" };
+    let html = '<div class="podium">';
+    [2, 1, 3].forEach((rank) => {
+      const r = byRank[rank];
+      if (!r) return;
+      const pts = computePoints(r.flags_solved, r.time_seconds);
+      const icon = rank === 1
+        ? '<div class="spot-trophy">🏆</div>'
+        : '<div class="spot-medal">' + (rank === 2 ? "🥈" : "🥉") + "</div>";
+      html += '<div class="podium-spot spot-' + rank + '">' +
+        '<div class="spot-info">' + icon +
+          '<div class="spot-name">' + escapeHtml(r.name) + "</div>" +
+          '<div class="spot-points">' + pts.toLocaleString() + " pts</div>" +
+        "</div>" +
+        '<div class="spot-block">' +
+          '<div class="spot-num">' + rank + "</div>" +
+          '<div class="spot-label">' + labels[rank] + "</div>" +
+        "</div>" +
+      "</div>";
+    });
+    html += "</div>";
+    podium.innerHTML = html;
+  }
+
+  function openWinners() {
+    if (!winnersModal) return;
+    renderPodium();
+    winnersModal.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeWinners() {
+    if (!winnersModal) return;
+    winnersModal.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  if (showWinnersBtn) showWinnersBtn.addEventListener("click", openWinners);
+  if (winnersClose) winnersClose.addEventListener("click", closeWinners);
+  if (winnersModal) {
+    const wBackdrop = winnersModal.querySelector(".winners-modal-backdrop");
+    if (wBackdrop) wBackdrop.addEventListener("click", closeWinners);
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && winnersModal && !winnersModal.hidden) closeWinners();
+  });
 
   if (lbSave) {
     lbSave.addEventListener("click", async () => {
