@@ -20,8 +20,8 @@
      3. Project Settings → API → copy your Project URL and the
         "anon public" key into the two lines below.
      ============================================================ */
-  const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
-  const SUPABASE_ANON_KEY = "YOUR-ANON-PUBLIC-KEY";
+  const SUPABASE_URL = "https://jrzvscjivieldhnibjtp.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpyenZzY2ppdmllbGRobmlianRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyMDgxMTYsImV4cCI6MjEwMjc4NDExNn0.up296qeLN67b-keY2HP7xr-x8E22jiyVmTdvvgdomic";
   const LEADERBOARD_TABLE = "leaderboard";
   const LEADERBOARD_READY = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR-ANON");
 
