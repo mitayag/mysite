@@ -391,6 +391,7 @@ b, strong { color: #fff; font-weight: 600; }
 .note { font-size: .82rem; color: var(--muted-2); margin-top: 12px; }
 
 /* ---------- Resume / timeline ---------- */
+#resume .container > .card + .card { margin-top: 24px; }
 .timeline-title { margin-bottom: 24px; }
 .timeline {
   position: relative;
