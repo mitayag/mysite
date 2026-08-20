@@ -30,7 +30,7 @@
     let ctx = null;
     let muted = false;
     try { muted = localStorage.getItem("soundMuted") === "1"; } catch (e) {}
-    const VOLUME = 1.8; // overall loudness multiplier
+    const VOLUME = 1.4; // overall loudness multiplier
 
     function ensureCtx() {
       const AC = window.AudioContext || window.webkitAudioContext;
