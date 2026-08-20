@@ -21,15 +21,16 @@
   ];
 
   /* ---------- "Hack" boot sequence lines (EDIT ME) ----------
-     c: optional class  (ok | fail | granted)
-     bar: true → show a fake brute-force progress bar after the line */
-  const BOOT = [
+     c: optional class  (ok | fail | granted) */
+  const PRE_LINES = [
     { t: "$ ./init.sh --target marlontayag.io" },
     { t: "[+] establishing encrypted link ............. OK", c: "ok" },
     { t: "[+] scanning ports 1..65535 ................ 22 · 80 · 443 open" },
     { t: "[+] fingerprinting host .................... Holy Angel University" },
-    { t: "[+] brute-forcing credentials", bar: true },
-    { t: "[+] decrypting profile.dat ................. 100%", c: "ok" },
+    { t: "[+] brute-forcing credentials" },
+  ];
+  const WIN_LINES = [
+    { t: "[+] FIREWALL BYPASSED", c: "ok" },
     { t: "ACCESS GRANTED — identity: MARLON I. TAYAG", c: "granted" },
   ];
 
@@ -105,12 +106,19 @@
     tick();
   }
 
-  /* ---------- "Hack" boot sequence ---------- */
+  /* ---------- "Hack" boot sequence + firewall mini-game ---------- */
   const bootlog = document.getElementById("bootlog");
   const heroReveal = document.getElementById("heroReveal");
   const terminal = document.querySelector(".terminal");
   const replayBtn = document.getElementById("replayBtn");
+  const gamePanel = document.getElementById("hackGame");
+  const nodeGrid = document.getElementById("nodeGrid");
+  const gameBar = document.getElementById("gameBar");
+  const gameStatus = document.getElementById("gameStatus");
   let booting = false;
+
+  const NODES = 9;
+  const CRACKS_TO_WIN = 6;
 
   async function typeLine(text, cls) {
     const line = document.createElement("div");
@@ -128,6 +136,86 @@
     cur.remove();
   }
 
+  /* The mini-game: tap the glowing green nodes (crack the firewall),
+     avoid the red traps. Resolves when enough nodes are cracked. */
+  function playGame() {
+    return new Promise((resolve) => {
+      const nodes = [];
+      let cracks = 0;
+
+      gamePanel.hidden = false;
+      nodeGrid.innerHTML = "";
+      for (let i = 0; i < NODES; i++) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "node idle";
+        b.setAttribute("aria-label", "Firewall node " + (i + 1));
+        nodes.push(b);
+        nodeGrid.appendChild(b);
+      }
+
+      function setBar() {
+        gameBar.style.width = Math.round((cracks / CRACKS_TO_WIN) * 100) + "%";
+        gameStatus.textContent =
+          cracks >= CRACKS_TO_WIN
+            ? "firewall bypassed!"
+            : "breach progress " + cracks + "/" + CRACKS_TO_WIN;
+        gameStatus.className = "hack-game-status";
+      }
+
+      function render() {
+        nodes.forEach((n) => {
+          if (!n.classList.contains("cracked")) {
+            n.className = "node idle";
+            n.textContent = "";
+          }
+        });
+        const idle = nodes.filter((n) => !n.classList.contains("cracked"));
+        if (cracks >= CRACKS_TO_WIN) return;
+        const target = idle[Math.floor(Math.random() * idle.length)];
+        target.classList.add("target");
+        target.textContent = "●";
+        const rest = idle.filter((n) => n !== target);
+        if (rest.length) {
+          const trap = rest[Math.floor(Math.random() * rest.length)];
+          trap.classList.add("trap");
+          trap.textContent = "✕";
+        }
+        setBar();
+      }
+
+      nodeGrid.addEventListener("click", (e) => {
+        const node = e.target.closest(".node");
+        if (!node) return;
+        if (node.classList.contains("target")) {
+          cracks++;
+          node.classList.remove("target", "trap");
+          node.classList.add("cracked");
+          node.textContent = "✓";
+          node.setAttribute("aria-label", "Cracked");
+          if (cracks >= CRACKS_TO_WIN) {
+            setBar();
+            resolve();
+            return;
+          }
+          render();
+        } else if (node.classList.contains("trap")) {
+          node.classList.remove("trap");
+          node.classList.add("shake");
+          gameStatus.textContent = "ACCESS DENIED — trap node";
+          gameStatus.className = "hack-game-status denied";
+          setTimeout(() => {
+            node.classList.remove("shake");
+            render();
+          }, 350);
+        }
+      });
+
+      setBar();
+      render();
+    });
+  }
+
   async function runBoot() {
     if (booting || !bootlog || !heroReveal) return;
     booting = true;
@@ -136,23 +224,20 @@
     bootlog.innerHTML = "";
     heroReveal.classList.remove("revealed");
     stopTyper();
+    if (gamePanel) gamePanel.hidden = true;
     if (terminal) terminal.classList.add("boot-running");
 
     try {
-      for (const step of BOOT) {
+      for (const step of PRE_LINES) {
         await typeLine(step.t, step.c);
-        if (step.bar) {
-          const wrap = document.createElement("div");
-          wrap.className = "hack-progress";
-          const bar = document.createElement("span");
-          bar.className = "hack-bar";
-          wrap.appendChild(bar);
-          bootlog.appendChild(wrap);
-          await sleep(60);
-          bar.style.width = "100%";
-          await sleep(900);
-        }
-        await sleep(160);
+        await sleep(150);
+      }
+      if (gamePanel && nodeGrid) {
+        await playGame();
+      }
+      for (const step of WIN_LINES) {
+        await typeLine(step.t, step.c);
+        await sleep(140);
       }
       await sleep(650);
     } catch (e) {
@@ -160,6 +245,7 @@
     }
 
     bootlog.style.display = "none";
+    if (gamePanel) gamePanel.hidden = true;
     if (terminal) terminal.classList.remove("boot-running");
     heroReveal.classList.add("revealed");
     startTyper();

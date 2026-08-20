@@ -63,6 +63,15 @@
         </div>
         <div class="terminal-body">
           <div class="bootlog" id="bootlog" aria-hidden="true"></div>
+          <div class="hack-game" id="hackGame" hidden>
+            <div class="hack-game-head">
+              <span class="hack-game-title">⚠ FIREWALL DETECTED</span>
+              <span class="hack-game-sub">tap the glowing <b>green</b> nodes to breach · avoid the <b>red</b> traps</span>
+            </div>
+            <div class="node-grid" id="nodeGrid" aria-label="Firewall breach game"></div>
+            <div class="hack-progress"><span class="hack-bar" id="gameBar"></span></div>
+            <p class="hack-game-status" id="gameStatus">breach progress 0/6</p>
+          </div>
           <div class="hero-reveal" id="heroReveal">
             <p><span class="prompt">$</span> whoami</p>
             <h1 class="hero-name">MARLON&nbsp;I.&nbsp;TAYAG</h1>
