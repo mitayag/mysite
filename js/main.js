@@ -11,6 +11,20 @@
 (function () {
   "use strict";
 
+  /* ============================================================
+     SUPABASE LEADERBOARD CONFIG  ← EDIT ME
+     ------------------------------------------------------------
+     1. Create a free project at https://supabase.com
+     2. Open the SQL Editor and run the SQL block in the README
+        (it creates the "leaderboard" table + public read/write).
+     3. Project Settings → API → copy your Project URL and the
+        "anon public" key into the two lines below.
+     ============================================================ */
+  const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
+  const SUPABASE_ANON_KEY = "YOUR-ANON-PUBLIC-KEY";
+  const LEADERBOARD_TABLE = "leaderboard";
+  const LEADERBOARD_READY = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR-ANON");
+
   /* ---------- Rotating hero roles (EDIT ME) ---------- */
   const ROLES = [
     "Dean, School of Computing @ Holy Angel University",
@@ -452,7 +466,15 @@
   const ctfGrid = document.getElementById("ctfGrid");
   const ctfScore = document.getElementById("ctfScore");
   const ctfWin = document.getElementById("ctfWin");
+  const leaderboardSubmit = document.getElementById("leaderboardSubmit");
+  const ctfTime = document.getElementById("ctfTime");
+  const lbName = document.getElementById("lbName");
+  const lbSave = document.getElementById("lbSave");
+  const lbFeedback = document.getElementById("lbFeedback");
+  const lbBody = document.getElementById("lbBody");
   let ctfSolved = 0;
+  let ctfStartTime = null;
+  let ctfElapsed = null;
 
   function renderCtf() {
     if (!ctfGrid) return;
@@ -497,7 +519,10 @@
           hintText.hidden = true;
           ctfSolved++;
           if (ctfScore) ctfScore.textContent = ctfSolved + "/" + CHALLENGES.length;
-          if (ctfSolved === CHALLENGES.length && ctfWin) ctfWin.hidden = false;
+          if (ctfSolved === CHALLENGES.length) {
+            if (ctfWin) ctfWin.hidden = false;
+            finishCtf();
+          }
         } else {
           feedback.textContent = "✕ Incorrect — try again.";
           feedback.className = "ctf-feedback err";
@@ -510,8 +535,87 @@
       input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") check();
       });
+      input.addEventListener("focus", ensureTimer);
     });
   }
+
+  /* ---------- CTF leaderboard (Supabase) ---------- */
+  function ensureTimer() {
+    if (!ctfStartTime) ctfStartTime = Date.now();
+  }
+
+  function finishCtf() {
+    ctfElapsed = ctfStartTime ? Math.max(1, Math.round((Date.now() - ctfStartTime) / 1000)) : null;
+    if (ctfTime) ctfTime.textContent = ctfElapsed ? formatTime(ctfElapsed) : "--";
+    if (leaderboardSubmit) leaderboardSubmit.hidden = false;
+  }
+
+  function formatTime(s) {
+    return s < 60 ? s + "s" : Math.floor(s / 60) + "m " + (s % 60) + "s";
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  async function loadLeaderboard() {
+    if (!lbBody) return;
+    if (!LEADERBOARD_READY) {
+      lbBody.innerHTML = '<tr><td colspan="4" class="lb-empty">Leaderboard not connected — add your Supabase keys in js/main.js.</td></tr>';
+      return;
+    }
+    try {
+      const res = await fetch(
+        SUPABASE_URL + "/rest/v1/" + LEADERBOARD_TABLE + "?select=name,time_seconds,flags_solved&order=time_seconds.asc&limit=10",
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY } }
+      );
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const rows = await res.json();
+      if (!rows.length) {
+        lbBody.innerHTML = '<tr><td colspan="4" class="lb-empty">No scores yet — be the first!</td></tr>';
+        return;
+      }
+      lbBody.innerHTML = rows
+        .map((r, i) => "<tr><td>" + (i + 1) + "</td><td>" + escapeHtml(r.name) + "</td><td>" + formatTime(r.time_seconds) + "</td><td>" + r.flags_solved + "/5</td></tr>")
+        .join("");
+    } catch (e) {
+      lbBody.innerHTML = '<tr><td colspan="4" class="lb-empty">Couldn\'t load the leaderboard.</td></tr>';
+    }
+  }
+
+  if (lbSave) {
+    lbSave.addEventListener("click", async () => {
+      const name = (lbName ? lbName.value : "").trim();
+      if (!name) {
+        if (lbFeedback) { lbFeedback.textContent = "Enter a handle first."; lbFeedback.className = "ctf-feedback err"; }
+        return;
+      }
+      if (!LEADERBOARD_READY || ctfElapsed == null) return;
+      lbSave.disabled = true;
+      if (lbFeedback) { lbFeedback.textContent = "Saving…"; lbFeedback.className = "ctf-feedback"; }
+      try {
+        const res = await fetch(SUPABASE_URL + "/rest/v1/" + LEADERBOARD_TABLE, {
+          method: "POST",
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: "Bearer " + SUPABASE_ANON_KEY,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({ name, time_seconds: ctfElapsed, flags_solved: CHALLENGES.length }),
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        if (lbFeedback) { lbFeedback.textContent = "Score saved! 🎉"; lbFeedback.className = "ctf-feedback ok"; }
+        if (lbName) lbName.disabled = true;
+        loadLeaderboard();
+      } catch (e) {
+        if (lbFeedback) { lbFeedback.textContent = "Save failed — try again."; lbFeedback.className = "ctf-feedback err"; }
+        lbSave.disabled = false;
+      }
+    });
+  }
+
+  loadLeaderboard();
 
   renderCtf();
 

@@ -601,6 +601,41 @@ b, strong { color: #fff; font-weight: 600; }
 .ctf-win p { color: var(--ok); font-family: var(--font-mono); font-weight: 700; }
 @media (max-width: 720px) { .ctf-grid { grid-template-columns: 1fr; } }
 
+@media (max-width: 720px) { .ctf-grid { grid-template-columns: 1fr; } }
+
+/* ---------- CTF leaderboard ---------- */
+.leaderboard { margin-top: 34px; }
+.leaderboard-title {
+  font-family: var(--font-head); font-size: 1.15rem;
+  color: #fff; margin-bottom: 16px;
+}
+.leaderboard-submit {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px;
+}
+.leaderboard-submit-text { color: var(--muted); font-size: .9rem; margin-bottom: 12px; }
+.leaderboard-submit-text strong { color: var(--accent); font-family: var(--font-mono); }
+.leaderboard-submit .ctf-form { margin-bottom: 0; }
+.leaderboard-table-wrap {
+  overflow-x: auto; border: 1px solid var(--line);
+  border-radius: var(--radius-sm); background: var(--card);
+}
+.leaderboard-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.leaderboard-table th, .leaderboard-table td {
+  text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line-soft);
+  white-space: nowrap;
+}
+.leaderboard-table thead th {
+  font-family: var(--font-mono); font-size: .72rem;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted-2);
+}
+.leaderboard-table tbody tr:last-child td { border-bottom: 0; }
+.leaderboard-table tbody td { color: var(--text); }
+.leaderboard-table tbody tr:first-child td { color: #fff; font-weight: 600; }
+.leaderboard-table tbody tr:first-child td:first-child { color: #fbbf24; }
+.lb-empty { color: var(--muted-2); text-align: center; }
+
 /* ---------- vCard / QR section ---------- */
 .vcard-card {
   display: grid; grid-template-columns: auto 1fr;

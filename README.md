@@ -149,6 +149,42 @@ To receive messages as real form submissions instead (e.g. via [Formspree](https
 
 ---
 
+## 🏆 CTF Leaderboard (Supabase — free)
+
+The CTF section has an optional **global leaderboard** (fastest to solve all 5 flags).
+It needs a free Supabase project (the site itself stays static on GitHub Pages).
+
+### One-time setup (~5 minutes)
+1. Create a free account + project at <https://supabase.com>.
+2. Open **SQL Editor → New query**, paste the block below, and **Run**:
+   ```sql
+   create table if not exists leaderboard (
+     id uuid primary key default gen_random_uuid(),
+     name text not null,
+     time_seconds integer not null,
+     flags_solved integer not null,
+     created_at timestamptz default now()
+   );
+
+   alter table leaderboard enable row level security;
+
+   create policy "anon_select" on leaderboard
+     for select to anon using (true);
+
+   create policy "anon_insert" on leaderboard
+     for insert to anon with check (true);
+   ```
+3. **Project Settings → API** → copy:
+   - **Project URL** (e.g. `https://xxxx.supabase.co`)
+   - **anon public** key
+4. Paste them at the top of `js/main.js` in the `SUPABASE LEADERBOARD CONFIG` block.
+
+The leaderboard shows the top 10 by fastest time, lets players save their score with a
+handle, and loads automatically. Until the keys are added, the CTF works normally and
+the leaderboard just shows a "not connected" note.
+
+---
+
 ## 🧱 Tech notes
 
 - **Zero dependencies** — nothing to install, no `node_modules`, no build step.
