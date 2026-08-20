@@ -653,7 +653,7 @@ b, strong { color: #fff; font-weight: 600; }
   font-family: var(--font-mono);
   font-size: .88rem; line-height: 1.9;
   color: var(--accent);
-  min-height: 150px;
+  min-height: 120px;
 }
 .bootlog .line { white-space: pre-wrap; word-break: break-word; }
 .bootlog .line.ok { color: var(--ok); }
@@ -722,7 +722,7 @@ html.js body.locked .footer { display: none; }
 /* ---------- Firewall mini-game ---------- */
 .hack-game {
   font-family: var(--font-mono);
-  padding: 6px 0 10px;
+  padding: 4px 0 6px;
   text-align: center;
 }
 .hack-game-intro {
@@ -753,7 +753,7 @@ html.js body.locked .footer { display: none; }
 
 .node-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px; max-width: 300px; margin: 4px auto 16px;
+  gap: 8px; max-width: 240px; margin: 4px auto 12px;
 }
 .node {
   aspect-ratio: 1;
@@ -854,5 +854,5 @@ html.js body.locked .footer { display: none; }
 
 @media (max-width: 720px) {
   .replay-btn span { display: none; }
-  .bootlog { min-height: 150px; }
+  .bootlog { min-height: 110px; }
 }

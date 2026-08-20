@@ -234,6 +234,7 @@
       const begin = () => {
         if (intro) intro.hidden = true;
         if (playArea) playArea.hidden = false;
+        bootlog.style.display = "none"; // collapse the log so the game box stays compact
         buildNodes();
         setBar();
         render();
@@ -270,6 +271,7 @@
       if (gamePanel && nodeGrid) {
         await playGame();
       }
+      bootlog.style.display = ""; // bring the log back for the "ACCESS GRANTED" lines
       for (const step of WIN_LINES) {
         await typeLine(step.t, step.c);
         await sleep(140);
