@@ -60,6 +60,7 @@
         <li><a href="#resume">Resume</a></li>
         <li><a href="#research">Research</a></li>
         <li><a href="#awards">Awards</a></li>
+        <li><a href="#ctf">CTF</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a class="btn btn-sm btn-ghost" href="vcard.vcf" download>vCard</a></li>
       </ul>
@@ -575,6 +576,22 @@
             </div>
           </article>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTF =================
+         EDIT: challenges live in the CHALLENGES array in js/main.js. -->
+    <section class="section section-alt" id="ctf">
+      <div class="container">
+        <h2 class="section-kicker">// capture the flag</h2>
+        <h3 class="section-title">CTF Challenge</h3>
+        <p class="ctf-intro">Five mini challenges — each hides a flag in the format <code>flag&#123;...&#125;</code>. Crack them all to prove your skills. <strong>Score: <span id="ctfScore">0/5</span></strong></p>
+        <!-- flag{source_savvy} -->
+        <div class="ctf-grid" id="ctfGrid"></div>
+        <div class="ctf-win" id="ctfWin" hidden>
+          <span class="ctf-win-icon" aria-hidden="true">🏆</span>
+          <p>All flags captured — you're a CTF master!</p>
         </div>
       </div>
     </section>

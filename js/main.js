@@ -408,6 +408,113 @@
     });
   }
 
+  /* ---------- CTF challenges (EDIT ME) ----------
+     Each: { title, clue, encoded (optional), hint, flag }
+     Flags are checked case-insensitively. The first flag is also hidden in
+     an HTML comment in index.html (the "view source" challenge). */
+  const CHALLENGES = [
+    {
+      title: "Inspector",
+      clue: "The first flag is hiding in this page's HTML source. View the source and search for \"flag{\".",
+      hint: "Right-click → View Page Source (or Ctrl+U / Cmd+Option+U).",
+      flag: "flag{source_savvy}",
+    },
+    {
+      title: "Decoder",
+      clue: "This string is Base64-encoded. Decode it to reveal the flag.",
+      encoded: "ZmxhZ3tiYXNlNjRfZGVjb2Rlcn0=",
+      hint: "Look up 'base64 decode' in a search engine.",
+      flag: "flag{base64_decoder}",
+    },
+    {
+      title: "Classic",
+      clue: "This flag was rotated 13 places. ROT13 it back.",
+      encoded: "synt{ebg13_vf_pynffvp}",
+      hint: "ROT13 shifts each letter 13 places; many sites offer a ROT13 tool.",
+      flag: "flag{rot13_is_classic}",
+    },
+    {
+      title: "Bits",
+      clue: "Convert these binary groups to ASCII.",
+      encoded: "01100110 01101100 01100001 01100111 01111011 01100010 01101001 01101110 01100001 01110010 01111001 01111101",
+      hint: "Each 8-bit group is one ASCII character.",
+      flag: "flag{binary}",
+    },
+    {
+      title: "Shift",
+      clue: "A Caesar cipher shifted by 3. Decrypt it.",
+      encoded: "iodj{fwi_pdvwhu}",
+      hint: "Shift each letter back 3 places (D→A, E→B…).",
+      flag: "flag{ctf_master}",
+    },
+  ];
+
+  const ctfGrid = document.getElementById("ctfGrid");
+  const ctfScore = document.getElementById("ctfScore");
+  const ctfWin = document.getElementById("ctfWin");
+  let ctfSolved = 0;
+
+  function renderCtf() {
+    if (!ctfGrid) return;
+    CHALLENGES.forEach((ch, i) => {
+      const card = document.createElement("article");
+      card.className = "ctf-card";
+      card.innerHTML =
+        '<div class="ctf-card-head">' +
+          '<span class="ctf-num">' + String(i + 1).padStart(2, "0") + "</span>" +
+          "<h4>" + ch.title + "</h4>" +
+        "</div>" +
+        '<p class="ctf-clue">' + ch.clue + "</p>" +
+        (ch.encoded ? '<code class="ctf-code">' + ch.encoded + "</code>" : "") +
+        '<div class="ctf-form">' +
+          '<input class="ctf-input" type="text" placeholder="flag{...}" aria-label="Flag for ' + ch.title + '">' +
+          '<button class="btn btn-ghost btn-sm ctf-submit" type="button">Submit</button>' +
+        "</div>" +
+        '<button class="ctf-hint" type="button">Show hint</button>' +
+        '<p class="ctf-hint-text" hidden>💡 ' + ch.hint + "</p>" +
+        '<p class="ctf-feedback"></p>';
+      ctfGrid.appendChild(card);
+
+      const input = card.querySelector(".ctf-input");
+      const submit = card.querySelector(".ctf-submit");
+      const feedback = card.querySelector(".ctf-feedback");
+      const hintBtn = card.querySelector(".ctf-hint");
+      const hintText = card.querySelector(".ctf-hint-text");
+
+      hintBtn.addEventListener("click", () => {
+        hintText.hidden = !hintText.hidden;
+        hintBtn.textContent = hintText.hidden ? "Show hint" : "Hide hint";
+      });
+
+      function check() {
+        if (input.value.trim().toLowerCase() === ch.flag.toLowerCase()) {
+          card.classList.add("solved");
+          input.disabled = true;
+          submit.disabled = true;
+          feedback.textContent = "✓ Flag captured!";
+          feedback.className = "ctf-feedback ok";
+          hintBtn.hidden = true;
+          hintText.hidden = true;
+          ctfSolved++;
+          if (ctfScore) ctfScore.textContent = ctfSolved + "/" + CHALLENGES.length;
+          if (ctfSolved === CHALLENGES.length && ctfWin) ctfWin.hidden = false;
+        } else {
+          feedback.textContent = "✕ Incorrect — try again.";
+          feedback.className = "ctf-feedback err";
+          card.classList.add("shake");
+          setTimeout(() => card.classList.remove("shake"), 350);
+        }
+      }
+
+      submit.addEventListener("click", check);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") check();
+      });
+    });
+  }
+
+  renderCtf();
+
   /* ---------- Lock pop-up: gated content before the game ---------- */
   const lockModal = document.getElementById("lockModal");
   const lockModalPlay = document.getElementById("lockModalPlay");
