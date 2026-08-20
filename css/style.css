@@ -513,6 +513,37 @@ b, strong { color: #fff; font-weight: 600; }
   .pub-link { margin-left: 0; }
 }
 
+/* ---------- Awards & recognition ---------- */
+.awards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.award-card {
+  display: flex; gap: 16px; align-items: center;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px;
+  transition: transform .25s, border-color .25s;
+}
+.award-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+.award-card-featured { grid-column: 1 / -1; }
+.award-badge-img { flex-shrink: 0; }
+.award-badge-img img {
+  width: 96px; height: auto; border-radius: 12px;
+  border: 1px solid var(--line);
+  display: block;
+  transition: transform .25s;
+}
+.award-badge-img:hover img { transform: scale(1.04); }
+.award-icon { width: 48px; height: 48px; flex-shrink: 0; }
+.award-body { flex: 1; min-width: 0; }
+.award-body h4 { font-family: var(--font-head); font-size: 1.05rem; color: #fff; margin-bottom: 4px; }
+.award-org { color: var(--muted); font-size: .85rem; margin-bottom: 2px; }
+.award-date { font-family: var(--font-mono); font-size: .78rem; color: var(--accent-2); margin-bottom: 8px; }
+.award-body .pub-link { margin-left: 0; }
+
+@media (max-width: 720px) {
+  .awards-grid { grid-template-columns: 1fr; }
+  .award-card { padding: 16px; }
+  .award-badge-img img { width: 72px; }
+}
+
 /* ---------- vCard / QR section ---------- */
 .vcard-card {
   display: grid; grid-template-columns: auto 1fr;
