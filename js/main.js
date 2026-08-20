@@ -115,6 +115,7 @@
   const nodeGrid = document.getElementById("nodeGrid");
   const gameBar = document.getElementById("gameBar");
   const gameStatus = document.getElementById("gameStatus");
+  const hackOverlay = document.getElementById("hackOverlay");
   let booting = false;
 
   const NODES = 9;
@@ -225,6 +226,7 @@
     heroReveal.classList.remove("revealed");
     stopTyper();
     if (gamePanel) gamePanel.hidden = true;
+    if (hackOverlay) hackOverlay.hidden = true;
     if (terminal) terminal.classList.add("boot-running");
 
     try {
@@ -239,7 +241,14 @@
         await typeLine(step.t, step.c);
         await sleep(140);
       }
-      await sleep(650);
+      // Full-screen "PC hacked" effect before the whoami window appears
+      if (hackOverlay) {
+        hackOverlay.hidden = false;
+        await sleep(1800);
+        hackOverlay.hidden = true;
+      } else {
+        await sleep(650);
+      }
     } catch (e) {
       /* never leave the hero hidden if something breaks */
     }
