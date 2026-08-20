@@ -557,7 +557,7 @@ b, strong { color: #fff; font-weight: 600; }
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .hero-card { order: -1; flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .hero-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .hero-card-top { flex-basis: 100%; }
   .hero-stat { flex: 1; min-width: 120px; }
   .about-grid, .skills-grid, .contact-grid { grid-template-columns: 1fr; }
@@ -635,6 +635,17 @@ b, strong { color: #fff; font-weight: 600; }
 html.js .hero-reveal { opacity: 0; }
 .hero-reveal { transition: opacity .35s ease; }
 html.js .hero-reveal.revealed { opacity: 1; }
+
+/* Hero side card (quick facts) — hidden until the game is won */
+html.js .hero-card { display: none; }
+html.js .hero-card.revealed {
+  display: flex;
+  animation: cardIn .55s ease both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
 .hero-reveal.revealed .hero-name {
   animation: glitchIn .7s steps(9) both;
 }

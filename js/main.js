@@ -116,6 +116,7 @@
   const gameBar = document.getElementById("gameBar");
   const gameStatus = document.getElementById("gameStatus");
   const hackOverlay = document.getElementById("hackOverlay");
+  const heroCard = document.getElementById("heroCard");
   let booting = false;
 
   const NODES = 9;
@@ -224,6 +225,7 @@
     bootlog.style.display = "";
     bootlog.innerHTML = "";
     heroReveal.classList.remove("revealed");
+    if (heroCard) heroCard.classList.remove("revealed");
     stopTyper();
     if (gamePanel) gamePanel.hidden = true;
     if (hackOverlay) hackOverlay.hidden = true;
@@ -257,6 +259,7 @@
     if (gamePanel) gamePanel.hidden = true;
     if (terminal) terminal.classList.remove("boot-running");
     heroReveal.classList.add("revealed");
+    if (heroCard) heroCard.classList.add("revealed");
     startTyper();
     booting = false;
   }
@@ -270,6 +273,7 @@
     }
   } else if (heroReveal) {
     heroReveal.classList.add("revealed");
+    if (heroCard) heroCard.classList.add("revealed");
     startTyper();
   }
 
