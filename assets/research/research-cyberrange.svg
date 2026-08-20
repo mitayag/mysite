@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cyber security shield">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#0d1424" stroke="#1c2a45" stroke-width="2"/>
+  <g fill="none" stroke="#22d3ee" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 12 L 49 18 L 49 32 C 49 42 42 48 32 53 C 22 48 15 42 15 32 L 15 18 Z"/>
+    <path d="M25 32 L 30 37 L 40 27"/>
+  </g>
+</svg>

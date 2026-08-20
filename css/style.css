@@ -465,6 +465,54 @@ b, strong { color: #fff; font-weight: 600; }
 .research-card h4 { font-family: var(--font-head); font-size: 1.1rem; color: #fff; margin-bottom: 6px; }
 .research-card p { font-size: .88rem; color: var(--muted); }
 
+/* ---------- Publications & presentations list ---------- */
+.pubs-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+.pub-card {
+  display: flex; gap: 20px; align-items: flex-start;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  transition: transform .25s, border-color .25s;
+}
+.pub-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+.pub-thumb {
+  width: 64px; height: 64px; flex-shrink: 0;
+  border-radius: 14px;
+  background: #0d1424;
+}
+.pub-body { flex: 1; min-width: 0; }
+.pub-title {
+  font-family: var(--font-head);
+  font-size: 1.06rem; font-weight: 600;
+  line-height: 1.35; color: #fff; margin-bottom: 6px;
+}
+.pub-title a { color: #fff; }
+.pub-title a:hover { color: var(--accent); }
+.pub-venue { color: var(--muted); font-size: .86rem; margin-bottom: 12px; }
+.pub-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pub-badge {
+  font-family: var(--font-mono); font-size: .7rem;
+  padding: 3px 11px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--muted);
+}
+.pub-badge.journal { color: var(--accent); border-color: rgba(34, 211, 238, .35); }
+.pub-badge.conf { color: var(--accent-2); border-color: rgba(167, 139, 250, .35); }
+.pub-badge.award { color: #fbbf24; border-color: rgba(251, 191, 36, .4); }
+.pub-badge.scopus { color: var(--accent-2); border-color: rgba(167, 139, 250, .45); }
+.pub-link {
+  font-family: var(--font-mono); font-size: .74rem;
+  color: var(--accent); margin-left: auto;
+  white-space: nowrap;
+}
+.pub-link:hover { text-decoration: underline; }
+
+@media (max-width: 720px) {
+  .pub-card { gap: 14px; padding: 16px; }
+  .pub-thumb { width: 48px; height: 48px; }
+  .pub-link { margin-left: 0; }
+}
+
 /* ---------- vCard / QR section ---------- */
 .vcard-card {
   display: grid; grid-template-columns: auto 1fr;

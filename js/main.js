@@ -374,21 +374,6 @@
     sections.forEach((s) => spy.observe(s));
   }
 
-  /* ---------- Research filter ---------- */
-  const filterBtns = document.querySelectorAll(".filter-btn");
-  const researchCards = document.querySelectorAll(".research-card");
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      const filter = btn.dataset.filter;
-      researchCards.forEach((card) => {
-        const show = filter === "all" || card.dataset.category === filter;
-        card.classList.toggle("hidden", !show);
-      });
-    });
-  });
-
   /* ---------- Contact form (mailto compose, no backend) ----------
      To send through a service instead (e.g. Formspree), replace the
      submit handler with a fetch() to your Formspree endpoint.

@@ -413,41 +413,111 @@
     </section>
 
     <!-- ================= RESEARCH =================
-         EDIT: add a card per presentation. data-category: 1 = Networking, 2 = Mobile. -->
+         EDIT: add a publication by copying an <article class="pub-card"> block.
+         Papers with a link: put the URL in the title <a> and the "Read paper" button. -->
     <section class="section section-alt" id="research">
       <div class="container">
         <h2 class="section-kicker">// research</h2>
-        <h3 class="section-title">Research Presentations</h3>
+        <h3 class="section-title">Publications &amp; Presentations</h3>
 
-        <div class="filters" id="filters">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="1">Networking</button>
-          <button class="filter-btn" data-filter="2">Mobile</button>
-        </div>
+        <div class="pubs-grid">
 
-        <div class="research-grid" id="researchGrid">
-
-          <figure class="research-card reveal" data-category="1">
-            <div class="research-img">
-              <img src="images/psite.jpg" alt="PSITE research presentation" loading="lazy">
-              <span class="research-tag">Networking</span>
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-helmet.svg" alt="Smart motorcycle helmet" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3432327" target="_blank" rel="noopener">Smart Motorcycle Helmet: Real-Time Crash Detection With Emergency Notification, Tracker, and Anti-Theft System Using Internet-of-Things Cloud-Based Technology</a></h4>
+              <p class="pub-venue">International Journal of Computer Science &amp; Information Technology (IJCSIT) · Vol 11, No 3 · June 2019</p>
+              <div class="pub-meta">
+                <span class="pub-badge journal">Journal</span>
+                <a class="pub-link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3432327" target="_blank" rel="noopener">Read paper ↗</a>
+              </div>
             </div>
-            <figcaption>
-              <h4>PSITE</h4>
-              <p>Research presentation delivered at a PSITE (Philippine Society of Information Technology Educators) event.</p>
-            </figcaption>
-          </figure>
+          </article>
 
-          <figure class="research-card reveal" data-category="2">
-            <div class="research-img">
-              <img src="images/iamure.jpg" alt="IAMURE research presentation" loading="lazy">
-              <span class="research-tag">Mobile</span>
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-iot-camera.svg" alt="IoT camera" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3732009" target="_blank" rel="noopener">IoT Security: Penetration Testing of White-label Cloud-based IoT Camera Compromising Personal Data Privacy</a></h4>
+              <p class="pub-venue">International Journal of Computer Science &amp; Information Technology (IJCSIT) · Vol 12, No 5 · October 2020</p>
+              <div class="pub-meta">
+                <span class="pub-badge journal">Journal</span>
+                <a class="pub-link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3732009" target="_blank" rel="noopener">Read paper ↗</a>
+              </div>
             </div>
-            <figcaption>
-              <h4>IAMURE</h4>
-              <p>Research presentation delivered at an IAMURE (International Association of Multidisciplinary Research) conference.</p>
-            </figcaption>
-          </figure>
+          </article>
+
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-hacking.svg" alt="Hacking terminal" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3391093" target="_blank" rel="noopener">Compromising Systems: Implementing Hacking Phases</a></h4>
+              <p class="pub-venue">International Journal of Computer Science &amp; Information Technology (IJCSIT) · Vol 11, No 2 · April 2019</p>
+              <div class="pub-meta">
+                <span class="pub-badge journal">Journal</span>
+                <a class="pub-link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3391093" target="_blank" rel="noopener">Read paper ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-tablet.svg" alt="Tablet computer" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title"><a href="https://www.academia.edu/download/31576372/Perceptions_of_Grade_VII_Pupils_-_Tablet_PC_as_a_Replacement_for_Mathematics_Textbook(2).pdf" target="_blank" rel="noopener">Perceptions of Grade VII Pupils: Tablet PC as a Replacement for Mathematics Textbook</a></h4>
+              <p class="pub-venue">Academia.edu · Education research publication</p>
+              <div class="pub-meta">
+                <span class="pub-badge">Publication</span>
+                <a class="pub-link" href="https://www.academia.edu/download/31576372/Perceptions_of_Grade_VII_Pupils_-_Tablet_PC_as_a_Replacement_for_Mathematics_Textbook(2).pdf" target="_blank" rel="noopener">Read paper ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-leap.svg" alt="Leap Motion gesture" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title"><a href="https://doi.org/10.1145/3451471.3451474" target="_blank" rel="noopener">Leap Motion Controller Enabled Simulations of Personal Computer Assembly Programs</a></h4>
+              <p class="pub-venue">ICSIM 2021: 4th International Conference on Software Engineering and Information Management · January 2021 · pp. 17–21</p>
+              <div class="pub-meta">
+                <span class="pub-badge conf">Conference</span>
+                <span class="pub-badge scopus">Scopus-indexed</span>
+                <a class="pub-link" href="https://doi.org/10.1145/3451471.3451474" target="_blank" rel="noopener">Read paper ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-online.svg" alt="Online learning" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title">Faculty's Perceived Readiness, Technical Competencies, and Challenges in Online Teaching-Learning Environment</h4>
+              <p class="pub-venue">International Journal of Research Studies in Education · 2021 · Vol 10, No 14 · pp. 61–70</p>
+              <div class="pub-meta">
+                <span class="pub-badge journal">Journal</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-cyberrange.svg" alt="Cyber security shield" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title">Assessment of HAU Cyber Range: Cyber Security Laboratory Learning Platform</h4>
+              <p class="pub-venue">International Research Conference on Information Technology Education (IRCITE 2022) · April 22, 2022</p>
+              <div class="pub-meta">
+                <span class="pub-badge conf">Conference</span>
+                <span class="pub-badge award">Best Paper</span>
+                <span class="pub-badge award">Best Presenter</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal">
+            <img class="pub-thumb" src="assets/research/research-cipher.svg" alt="Cipher padlock" width="64" height="64">
+            <div class="pub-body">
+              <h4 class="pub-title">An Enhancement of PRESENT Cipher Algorithm Using Dynamic Character Position Function Mapping (DCPFM)</h4>
+              <p class="pub-venue">Philippine Society of Information Technology Educators (PSITE) · 18th National Conference on Information Technology Education (NCITE 2020) · October 30, 2020</p>
+              <div class="pub-meta">
+                <span class="pub-badge conf">Conference</span>
+                <span class="pub-badge award">Best Presenter</span>
+              </div>
+            </div>
+          </article>
 
         </div>
       </div>
