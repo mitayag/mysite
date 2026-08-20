@@ -45,11 +45,11 @@
       const t = c.currentTime + (when || 0);
       const o = c.createOscillator();
       const g = c.createGain();
-      o.type = type || "square";
+      o.type = type || "sine";
       o.frequency.setValueAtTime(freq, t);
       if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(vol || 0.14, t + 0.01);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       o.connect(g);
       g.connect(c.destination);
@@ -57,16 +57,47 @@
       o.stop(t + dur + 0.03);
     }
 
+    // A short filtered noise burst — used for keyboard ticks and glitch
+    function noise(dur, vol, when, freq, q) {
+      const c = ensureCtx();
+      if (!c) return;
+      const t = c.currentTime + (when || 0);
+      const len = Math.max(1, Math.floor(c.sampleRate * dur));
+      const buf = c.createBuffer(1, len, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      const src = c.createBufferSource();
+      src.buffer = buf;
+      const f = c.createBiquadFilter();
+      f.type = "bandpass";
+      f.frequency.value = freq || 2400;
+      f.Q.value = q || 1.2;
+      const g = c.createGain();
+      g.gain.setValueAtTime(vol || 0.1, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f); f.connect(g); g.connect(c.destination);
+      src.start(t);
+    }
+
     const FX = {
-      type()  { tone(820, 0.025, "square", 0.05); },
-      click() { tone(660, 0.05, "square", 0.1); },
-      crack() { tone(1100, 0.05, "square", 0.13); tone(1500, 0.06, "square", 0.09, 0.05); },
-      trap()  { tone(150, 0.16, "sawtooth", 0.16, 0, 80); },
-      grant() { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, "square", 0.12, i * 0.09)); },
-      hack()  { tone(160, 0.6, "sawtooth", 0.13, 0, 36); tone(900, 0.22, "square", 0.1, 0.45); },
-      win()   { [659, 784, 1047, 1319].forEach((f, i) => tone(f, 0.22, "triangle", 0.16, i * 0.12)); },
-      fail()  { tone(240, 0.12, "sawtooth", 0.13, 0, 120); tone(180, 0.16, "sawtooth", 0.11, 0.1, 90); },
-      deny()  { tone(320, 0.09, "square", 0.11); tone(240, 0.12, "square", 0.11, 0.09); },
+      // mechanical keyboard tick
+      type()  { noise(0.018, 0.045, 0, 3200, 2.2); },
+      // power-up "initiate breach"
+      click() { tone(300, 0.18, "sawtooth", 0.09, 0, 1100); noise(0.14, 0.06, 0, 1800); tone(1400, 0.05, "square", 0.05, 0.16); },
+      // node cracked — crisp digital "lock open" blip
+      crack() { tone(820, 0.05, "square", 0.09); tone(1640, 0.07, "square", 0.08, 0.045); noise(0.035, 0.045, 0.03, 4200, 3); },
+      // trap — alarm buzz
+      trap()  { tone(520, 0.09, "sawtooth", 0.13); tone(340, 0.12, "sawtooth", 0.13, 0.1, 130); noise(0.1, 0.05, 0, 700, 1); },
+      // ACCESS GRANTED — clean ascending chime
+      grant() { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, 0.22, "sine", 0.13, i * 0.09)); tone(1046.5, 0.45, "sine", 0.07, 0.42); },
+      // SYSTEM HACKED — glitchy sweep + noise
+      hack()  { noise(0.22, 0.11, 0, 900, 1); tone(1200, 0.5, "sawtooth", 0.11, 0, 110); tone(280, 0.38, "square", 0.07, 0.5, 1500); noise(0.16, 0.07, 0.5, 3000, 2); },
+      // CTF complete — bright arpeggio
+      win()   { [659.25, 783.99, 987.77, 1318.5].forEach((f, i) => tone(f, 0.2, "triangle", 0.14, i * 0.1)); tone(1318.5, 0.55, "sine", 0.09, 0.5); },
+      // CTF wrong — soft descending "error"
+      fail()  { tone(340, 0.1, "sine", 0.12); tone(226, 0.16, "sine", 0.12, 0.09); },
+      // access denied
+      deny()  { tone(392, 0.1, "square", 0.1); tone(311, 0.14, "square", 0.1, 0.1); },
     };
 
     function play(name) {
