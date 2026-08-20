@@ -720,6 +720,7 @@ html.js .hero-reveal.revealed { opacity: 1; }
 .hack-game-status.denied { color: var(--danger); }
 
 /* ---------- Full-screen "PC hacked" effect ---------- */
+.hack-overlay[hidden] { display: none; }
 .hack-overlay {
   position: fixed; inset: 0; z-index: 999;
   background: rgba(3, 5, 11, .97);
