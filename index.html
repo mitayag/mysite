@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marlon I. Tayag — Dean, School of Computing · Teacher / Programmer / Developer</title>
+  <meta name="description" content="Marlon I. Tayag — Dean, School of Computing at Holy Angel University. Teacher, Programmer, Web App and Mobile Developer. Networking, cybersecurity, IoT and more. CV, skills, research and contact.">
+
+  <!-- Fonts: Space Grotesk (headings), Inter (body), JetBrains Mono (code). Swap or remove these lines to change fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Favicon: terminal prompt icon (SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0f1a'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%2322d3ee' text-anchor='middle'%3E%26gt;_%3C/text%3E%3C/svg%3E">
+</head>
+
+<body>
+
+  <!-- Decorative fixed background (grid + glow) -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="glow glow-1" aria-hidden="true"></div>
+  <div class="glow glow-2" aria-hidden="true"></div>
+
+  <!-- ================= NAVIGATION =================
+       EDIT: add/remove/reorder menu items here.
+       Each link href="#..." must match a section id below. -->
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="#home"><span class="logo-bracket">&gt;</span> mit<span class="logo-cursor">_</span></a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a class="btn btn-sm btn-ghost" href="vcard.vcf" download>vCard</a></li>
+      </ul>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= HERO =================
+       EDIT: your name and title live here. The rotating role lines
+       are in the ROLES array in js/main.js. -->
+  <header class="hero" id="home">
+    <div class="container hero-grid">
+
+      <!-- Terminal window -->
+      <div class="terminal reveal">
+        <div class="terminal-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="terminal-title">marlon@tayag: ~/whoami</span>
+        </div>
+        <div class="terminal-body">
+          <p><span class="prompt">$</span> whoami</p>
+          <h1 class="hero-name">MARLON&nbsp;I.&nbsp;TAYAG</h1>
+          <p><span class="prompt">$</span> cat roles.txt</p>
+          <p class="typed-line"><span id="typer"></span><span class="caret" aria-hidden="true"></span></p>
+          <p><span class="prompt">$</span> uptime <span class="muted">— teaching, coding &amp; shipping since 1994</span></p>
+          <p><span class="prompt">$</span> <span class="comment"># scan the QR below to save my contact card</span></p>
+          <p class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Let's talk <span class="arrow">&rarr;</span></a>
+            <a class="btn btn-ghost" href="cv/CV%20Marlon%20Tayag.pdf" download>Download CV</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Side card: quick facts -->
+      <aside class="hero-card reveal">
+        <div class="hero-card-top">
+          <span class="pulse-dot"></span> Dean, School of Computing @ Holy Angel University
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">15<span>+</span></div>
+          <div class="hero-stat-label">years in IT education</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">4</div>
+          <div class="hero-stat-label">core stacks — Web · Mobile · Security · IoT</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">5<span>+</span></div>
+          <div class="hero-stat-label">universities taught</div>
+        </div>
+        <div class="hero-links">
+          <a href="mailto:mtayag@hau.edu.ph" class="chip">@ mtayag@hau.edu.ph</a>
+          <a href="vcard.vcf" download class="chip chip-accent">⬇ Save my vCard</a>
+        </div>
+      </aside>
+
+    </div>
+    <a class="scroll-cue" href="#about" aria-label="Scroll down"><span></span></a>
+  </header>
+
+  <main>
+
+    <!-- ================= ABOUT =================
+         EDIT: your story text (left) and contact facts (right). -->
+    <section class="section" id="about">
+      <div class="container">
+        <h2 class="section-kicker">// about</h2>
+        <h3 class="section-title">About Me</h3>
+
+        <div class="grid about-grid">
+          <div class="card about-story reveal">
+            <h4>My story</h4>
+            <p>Currently the <b>Dean of the School of Computing at Holy Angel University</b> (Angeles City, Philippines). Former IT Program Chairperson and full-time faculty of its computing programs, and guest lecturer at the HAU Graduate School teaching cyber security subjects — ethical hacking and forensics.</p>
+            <p>Extensive experience in application development — desktop, web and mobile — across a multi-platform environment. Served as <b>MIS Director at Systems Plus College Foundation</b>, in charge of the day-to-day MIS operations and the school's IT infrastructure, and lectured at <b>The Future University</b> (Khartoum, Sudan), <b>Baliuag University</b> and <b>Angeles University Foundation</b>.</p>
+            <p class="about-family">I have 4 children from my first wife — Mary Abigail, Mary Angel-lyn, Mary-Adelaine and Albert — and I'm happily married to my second wife whom I love so much… <b>JENNIFER E. TAYAG</b> ❤</p>
+            <a class="btn btn-primary" href="cv/CV%20Marlon%20Tayag.pdf" download>Download CV (PDF)</a>
+          </div>
+
+          <div class="card about-facts reveal">
+            <h4>Quick facts</h4>
+            <dl class="facts">
+              <div><dt>Birthday</dt><dd>08/29/1973</dd></div>
+              <div><dt>Phone</dt><dd><a href="tel:+639978254419">+63 997 825 4419</a></dd></div>
+              <div><dt>Email (work)</dt><dd><a href="mailto:mtayag@hau.edu.ph">mtayag@hau.edu.ph</a></dd></div>
+              <div><dt>Email (personal)</dt><dd><a href="mailto:lonskee2000@gmail.com">lonskee2000@gmail.com</a></dd></div>
+              <div><dt>Website</dt><dd><a href="https://www.marlontayag.io" target="_blank" rel="noopener">www.marlontayag.io</a></dd></div>
+              <div><dt>Based in</dt><dd>Angeles City, Philippines</dd></div>
+              <div><dt>YouTube</dt><dd>Skee Learning Network</dd></div>
+            </dl>
+            <div class="about-vcard">
+              <img src="assets/qr-vcard.png" alt="QR code to save Marlon Tayag's vCard" width="112" height="112" loading="lazy">
+              <div>
+                <p class="about-vcard-title">Digital business card</p>
+                <p>Scan with your phone camera to save my contact instantly, or download the file:</p>
+                <a class="btn btn-sm btn-ghost" href="vcard.vcf" download>⬇ vcard.vcf</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SKILLS =================
+         EDIT: specializations (chips), skill percentages (value=),
+         and certification groups below. -->
+    <section class="section section-alt" id="skills">
+      <div class="container">
+        <h2 class="section-kicker">// skills</h2>
+        <h3 class="section-title">Specializations, Skills &amp; Certifications</h3>
+
+        <div class="grid skills-grid">
+          <div class="card reveal">
+            <h4>Areas of specialization</h4>
+            <div class="chips">
+              <span class="chip">Networking</span>
+              <span class="chip">Network Security</span>
+              <span class="chip">Server Management</span>
+              <span class="chip">IoT &amp; IoT Security</span>
+              <span class="chip">Mobile App Development (Flutter)</span>
+              <span class="chip">Software Development (C#, Python, .NET)</span>
+              <span class="chip">Web Development (PHP)</span>
+              <span class="chip">Ethical Hacking &amp; Penetration Testing</span>
+            </div>
+
+            <div class="cert-group" style="margin-top:26px;">
+              <p class="cert-label">Skill matrix</p>
+              <div class="chips">
+                <span class="chip">Leadership</span>
+                <span class="chip">Project Management</span>
+                <span class="chip">Communication</span>
+                <span class="chip">Compliance</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <h4>Programming languages &amp; tools</h4>
+            <div class="bars" id="skillBars">
+              <div class="bar" data-value="90"><div class="bar-head"><span>Network &amp; Security Engineering</span><span class="bar-val">90%</span></div><div class="bar-track"><div class="bar-fill"></div></div></div>
+              <div class="bar" data-value="90"><div class="bar-head"><span>Database Development</span><span class="bar-val">90%</span></div><div class="bar-track"><div class="bar-fill"></div></div></div>
+              <div class="bar" data-value="85"><div class="bar-head"><span>C# / .NET</span><span class="bar-val">85%</span></div><div class="bar-track"><div class="bar-fill"></div></div></div>
+              <div class="bar" data-value="80"><div class="bar-head"><span>Python</span><span class="bar-val">80%</span></div><div class="bar-track"><div class="bar-fill"></div></div></div>
+              <div class="bar" data-value="75"><div class="bar-head"><span>Flutter (Android &amp; iOS)</span><span class="bar-val">75%</span></div><div class="bar-track"><div class="bar-fill"></div></div></div>
+              <div class="bar" data-value="70"><div class="bar-head"><span>PHP (Web)</span><span class="bar-val">70%</span></div><div class="bar-track"><div class="bar-fill"></div></div></div>
+            </div>
+            <p class="muted note">Self-assessed proficiency.</p>
+          </div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="card reveal" style="margin-top:24px;">
+          <h4>Certifications</h4>
+
+          <div class="cert-group">
+            <p class="cert-label">Cybersecurity &amp; Ethical Hacking</p>
+            <div class="chips">
+              <span class="chip">Certified Ethical Hacker (Practical) — EC-Council</span>
+              <span class="chip">Junior Penetration Tester — eLearnSecurity</span>
+              <span class="chip">ISO/IEC 27001 Information Security Associate</span>
+              <span class="chip">Cybersecurity Foundation — CertiProf</span>
+              <span class="chip">ICSI CNSS — Network Security Specialist</span>
+              <span class="chip">MTA Security Fundamentals — Microsoft</span>
+              <span class="chip">Qualys Certified Specialist — Vulnerability Management</span>
+            </div>
+          </div>
+
+          <div class="cert-group">
+            <p class="cert-label">Cloud &amp; IoT</p>
+            <div class="chips">
+              <span class="chip">AWS Certified Cloud Practitioner</span>
+              <span class="chip">Microsoft Azure Fundamentals (MCP)</span>
+              <span class="chip">Certified IoT Security Essentials — Cisco</span>
+              <span class="chip">IoT Fundamentals: IoT Security — Cisco Networking Academy</span>
+              <span class="chip">Certified Blockchain Practitioner</span>
+            </div>
+          </div>
+
+          <div class="cert-group">
+            <p class="cert-label">Networking</p>
+            <div class="chips">
+              <span class="chip">CCNA — Cisco Certified Network Associate</span>
+              <span class="chip">CCAI — Cisco Certified Academy Instructor</span>
+              <span class="chip">Fortinet Network Security Associate (NSE 1 &amp; 2)</span>
+              <span class="chip">Fluke CCTTA — Certified Cabling Test Technician</span>
+            </div>
+          </div>
+
+          <div class="cert-group">
+            <p class="cert-label">Teaching &amp; Productivity</p>
+            <div class="chips">
+              <span class="chip">Apple Certified Instructor</span>
+              <span class="chip">Apple Teacher</span>
+              <span class="chip">Microsoft Certified Educator</span>
+              <span class="chip">Microsoft Office Specialist — Word / Excel / PowerPoint 2010</span>
+              <span class="chip">Digital Educator Level 1</span>
+            </div>
+          </div>
+
+          <div class="cert-group" style="margin-bottom:0;">
+            <p class="cert-label">TESDA National Certificates</p>
+            <div class="chips">
+              <span class="chip">NC-IV Computer Programming</span>
+              <span class="chip">NC-II Computer Hardware &amp; Servicing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RESUME =================
+         EDIT: add experience and education entries by copying a <li> block. -->
+    <section class="section" id="resume">
+      <div class="container">
+        <h2 class="section-kicker">// resume</h2>
+        <h3 class="section-title">Experience &amp; Education</h3>
+
+        <div class="card reveal">
+          <h4 class="timeline-title">Experience</h4>
+          <ul class="timeline">
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">May 2023 — Present</div>
+              <div class="timeline-body">
+                <h5>Dean, School of Computing — Holy Angel University</h5>
+                <p class="timeline-role">Angeles City, Philippines</p>
+                <p>Leadership and strategic planning · faculty and staff management · curriculum oversight and development · budget management · student success and advocacy.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Dec 2022 — May 2023</div>
+              <div class="timeline-body">
+                <h5>IT Program Chairperson, School of Computing — Holy Angel University</h5>
+                <p class="timeline-role">Program oversight &amp; development</p>
+                <p>Faculty management, student support and advising, resource allocation and budget management, community and industry relations.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Jun 2017 — Present</div>
+              <div class="timeline-body">
+                <h5>Guest Lecturer, Graduate School — Holy Angel University</h5>
+                <p class="timeline-role">Cyber Security</p>
+                <p>Teaching cyber security subjects on ethical hacking and forensics; lectures and consultative services to students.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Jun 2017 — Dec 2022</div>
+              <div class="timeline-body">
+                <h5>Full-time Faculty, CICT — Holy Angel University</h5>
+                <p class="timeline-role">Cisco Networking &amp; Programming</p>
+                <p>Teaching Cisco Networking and programming subjects; preparing and delivering lectures, administering examinations, and supervising research works.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Dec 2016 — Jun 2017</div>
+              <div class="timeline-body">
+                <h5>The Future University <span class="tag">Khartoum, Sudan</span></h5>
+                <p class="timeline-role">Lecturer — MBA &amp; MIS</p>
+                <p>Taught MBA and MIS subjects focused on IT integration; prepared and delivered laboratory exercises for Programming, Data Files and Object Structures using Android app development.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Jun 2015 — Mar 2016</div>
+              <div class="timeline-body">
+                <h5>Baliuag University <span class="tag">Bulacan</span></h5>
+                <p class="timeline-role">Lecturer, Graduate School (MSIS)</p>
+                <p>Taught MSIS students Advanced OS with a final-output mini-OS built in Visual Studio C#; developed lab exercises for Network Security using VM and Kali Linux.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Aug 2011 — Nov 2016</div>
+              <div class="timeline-body">
+                <h5>Systems Plus College Foundation <span class="tag">Angeles City</span></h5>
+                <p class="timeline-role">MIS Director</p>
+                <p>Oversaw MIS department management, annual budget and IT infrastructure development; handled Campus++ management; monitored and implemented network security; delivered IT training to teaching and non-teaching staff.</p>
+              </div>
+            </li>
+
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">Nov 2011 — Nov 2016</div>
+              <div class="timeline-body">
+                <h5>Systems Plus College Foundation <span class="tag">Angeles City</span></h5>
+                <p class="timeline-role">Part-Time Faculty</p>
+                <p>Taught Network Security and Object-Oriented Programming; developed lab exercises for Network Security using VM and Kali Linux; taught Apple iOS and Android app development.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card reveal">
+          <h4 class="timeline-title">Education</h4>
+          <ul class="timeline">
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">2018 — Present</div>
+              <div class="timeline-body">
+                <h5>Technological Institute of the Philippines <span class="tag">Metro Manila</span></h5>
+                <p class="timeline-role">PhD Computer Science — dissertation: IoT Security</p>
+                <p>Academic subjects finished (18 units).</p>
+              </div>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">2013 — 2015</div>
+              <div class="timeline-body">
+                <h5>St. Linus University <span class="tag">Tarlac</span></h5>
+                <p class="timeline-role">Doctor in Information Technology (DIT)</p>
+              </div>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">2003 — 2009</div>
+              <div class="timeline-body">
+                <h5>Systems Plus College Foundation <span class="tag">Angeles City</span></h5>
+                <p class="timeline-role">Master in Information Technology</p>
+              </div>
+            </li>
+            <li class="timeline-item">
+              <span class="timeline-dot"></span>
+              <div class="timeline-date">1990 — 1994</div>
+              <div class="timeline-body">
+                <h5>Harvardian Colleges <span class="tag">San Fernando</span></h5>
+                <p class="timeline-role">Bachelor of Arts in Commerce (Business Management)</p>
+              </div>
+            </li>
+          </ul>
+          <p class="note"><a class="btn btn-ghost btn-sm" href="cv/CV%20Marlon%20Tayag.pdf" download>⬇ Download full CV (PDF)</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RESEARCH =================
+         EDIT: add a card per presentation. data-category: 1 = Networking, 2 = Mobile. -->
+    <section class="section section-alt" id="research">
+      <div class="container">
+        <h2 class="section-kicker">// research</h2>
+        <h3 class="section-title">Research Presentations</h3>
+
+        <div class="filters" id="filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="1">Networking</button>
+          <button class="filter-btn" data-filter="2">Mobile</button>
+        </div>
+
+        <div class="research-grid" id="researchGrid">
+
+          <figure class="research-card reveal" data-category="1">
+            <div class="research-img">
+              <img src="images/psite.jpg" alt="PSITE research presentation" loading="lazy">
+              <span class="research-tag">Networking</span>
+            </div>
+            <figcaption>
+              <h4>PSITE</h4>
+              <p>Research presentation delivered at a PSITE (Philippine Society of Information Technology Educators) event.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="research-card reveal" data-category="2">
+            <div class="research-img">
+              <img src="images/iamure.jpg" alt="IAMURE research presentation" loading="lazy">
+              <span class="research-tag">Mobile</span>
+            </div>
+            <figcaption>
+              <h4>IAMURE</h4>
+              <p>Research presentation delivered at an IAMURE (International Association of Multidisciplinary Research) conference.</p>
+            </figcaption>
+          </figure>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VCARD / QR =================
+         EDIT: the QR image points to vcard.vcf content. Replace assets/qr-vcard.png
+         with a new QR if you change the vCard or want a URL-based code. -->
+    <section class="section" id="vcard">
+      <div class="container">
+        <div class="card vcard-card reveal">
+          <div class="vcard-qr">
+            <img src="assets/qr-vcard.png" alt="vCard QR code — scan to save Marlon Tayag's contact" width="220" height="220" loading="lazy">
+          </div>
+          <div class="vcard-info">
+            <h2 class="section-kicker">// business card</h2>
+            <h3 class="section-title">Save my contact</h3>
+            <p>Scan the QR code with your phone camera — it adds my full contact card (name, phone, email, website, birthday) straight to your address book. No app needed.</p>
+            <div class="vcard-actions">
+              <a class="btn btn-primary" href="vcard.vcf" download>⬇ Download .vcf</a>
+              <a class="btn btn-ghost" href="vcard.vcf" target="_blank">Open vCard file</a>
+            </div>
+            <p class="muted note">Tip: after deploying, you can also print this QR on a physical business card.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT =================
+         EDIT: form submits to your email via mailto. To use a form service
+         (e.g. Formspree), see README. -->
+    <section class="section section-alt" id="contact">
+      <div class="container">
+        <h2 class="section-kicker">// contact</h2>
+        <h3 class="section-title">Contact Me</h3>
+
+        <div class="grid contact-grid">
+          <form class="card contact-form reveal" id="contactForm">
+            <div class="form-row">
+              <input type="text" name="name" placeholder="Name" required>
+              <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-row">
+              <input type="tel" name="phone" placeholder="Phone (optional)">
+            </div>
+            <textarea name="message" rows="5" placeholder="Message" required></textarea>
+            <button class="btn btn-primary" type="submit">Send message <span class="arrow">&rarr;</span></button>
+            <p class="form-status" id="formStatus"></p>
+          </form>
+
+          <div class="card contact-info reveal">
+            <h4>Direct lines</h4>
+            <ul class="contact-list">
+              <li><span class="contact-icon">✉</span><a href="mailto:mtayag@hau.edu.ph">mtayag@hau.edu.ph</a></li>
+              <li><span class="contact-icon">✉</span><a href="mailto:lonskee2000@gmail.com">lonskee2000@gmail.com</a></li>
+              <li><span class="contact-icon">☏</span><a href="tel:+639978254419">+63 997 825 4419</a></li>
+              <li><span class="contact-icon">◎</span><a href="https://www.marlontayag.io" target="_blank" rel="noopener">www.marlontayag.io</a></li>
+              <li><span class="contact-icon">▶</span><span>Skee Learning Network (YouTube)</span></li>
+              <li><span class="contact-icon">◈</span><a href="vcard.vcf" download>vCard (.vcf) download</a></li>
+            </ul>
+            <p class="muted note">Based in Angeles City, Philippines — available for lectures, training and development projects.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER =================
+       EDIT: copyright line and any extra links. -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> MTAYAG. All rights reserved. <a href="mailto:mtayag@hau.edu.ph">mtayag@hau.edu.ph</a> · <a href="mailto:lonskee2000@gmail.com">lonskee2000@gmail.com</a></p>
+      <p class="muted">Rebuilt from the 2017 marlontayag.com archive · static site · no build step</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
