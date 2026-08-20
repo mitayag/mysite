@@ -28,19 +28,14 @@
   /* ---------- Sound effects (Web Audio — no files needed) ---------- */
   const Sound = (() => {
     let ctx = null;
-    let master = null;
     let muted = false;
     try { muted = localStorage.getItem("soundMuted") === "1"; } catch (e) {}
+    const VOLUME = 1.8; // overall loudness multiplier
 
     function ensureCtx() {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return null;
       if (!ctx) ctx = new AC();
-      if (!master) {
-        master = ctx.createGain();
-        master.gain.value = 2.3; // master volume boost
-        master.connect(ctx.destination);
-      }
       if (ctx.state === "suspended") ctx.resume();
       return ctx;
     }
@@ -49,16 +44,17 @@
       const c = ensureCtx();
       if (!c) return;
       const t = c.currentTime + (when || 0);
+      const v = Math.min(0.5, (vol || 0.14) * VOLUME);
       const o = c.createOscillator();
       const g = c.createGain();
       o.type = type || "sine";
       o.frequency.setValueAtTime(freq, t);
       if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(vol || 0.14, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(v, t + 0.01);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       o.connect(g);
-      g.connect(master);
+      g.connect(c.destination);
       o.start(t);
       o.stop(t + dur + 0.03);
     }
@@ -68,6 +64,7 @@
       const c = ensureCtx();
       if (!c) return;
       const t = c.currentTime + (when || 0);
+      const v = Math.min(0.5, (vol || 0.1) * VOLUME);
       const len = Math.max(1, Math.floor(c.sampleRate * dur));
       const buf = c.createBuffer(1, len, c.sampleRate);
       const d = buf.getChannelData(0);
@@ -79,9 +76,9 @@
       f.frequency.value = freq || 2400;
       f.Q.value = q || 1.2;
       const g = c.createGain();
-      g.gain.setValueAtTime(vol || 0.1, t);
+      g.gain.setValueAtTime(v, t);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      src.connect(f); f.connect(g); g.connect(master);
+      src.connect(f); f.connect(g); g.connect(c.destination);
       src.start(t);
     }
 
