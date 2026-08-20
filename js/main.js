@@ -256,6 +256,7 @@
     heroReveal.classList.remove("revealed");
     if (heroCard) heroCard.classList.remove("revealed");
     if (heroGrid) heroGrid.classList.add("game-on");
+    document.body.classList.add("locked");
     stopTyper();
     if (gamePanel) gamePanel.hidden = true;
     if (hackOverlay) hackOverlay.hidden = true;
@@ -291,6 +292,7 @@
     if (heroGrid) heroGrid.classList.remove("game-on");
     heroReveal.classList.add("revealed");
     if (heroCard) heroCard.classList.add("revealed");
+    document.body.classList.remove("locked");
     startTyper();
     booting = false;
   }
@@ -305,6 +307,7 @@
   } else if (heroReveal) {
     heroReveal.classList.add("revealed");
     if (heroCard) heroCard.classList.add("revealed");
+    document.body.classList.remove("locked");
     startTyper();
   }
 

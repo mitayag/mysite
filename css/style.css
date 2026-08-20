@@ -694,6 +694,11 @@ html.js .hero-card.revealed {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: none; }
 }
+
+/* Page gate: everything below the hero (About, Skills, Resume, Research,
+   Contact, vCard, footer) stays hidden until the game is won. */
+html.js body.locked main,
+html.js body.locked .footer { display: none; }
 .hero-reveal.revealed .hero-name {
   animation: glitchIn .7s steps(9) both;
 }
