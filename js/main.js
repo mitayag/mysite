@@ -38,7 +38,7 @@
       if (!ctx) ctx = new AC();
       if (!master) {
         master = ctx.createGain();
-        master.gain.value = 2.0; // master volume boost
+        master.gain.value = 2.3; // master volume boost
         master.connect(ctx.destination);
       }
       if (ctx.state === "suspended") ctx.resume();
@@ -87,7 +87,7 @@
 
     const FX = {
       // mechanical keyboard tick
-      type()  { noise(0.018, 0.045, 0, 3200, 2.2); },
+      type()  { noise(0.03, 0.12, 0, 2400, 1.4); tone(170, 0.035, "square", 0.1); },
       // power-up "initiate breach"
       click() { tone(300, 0.18, "sawtooth", 0.09, 0, 1100); noise(0.14, 0.06, 0, 1800); tone(1400, 0.05, "square", 0.05, 0.16); },
       // node cracked — crisp digital "lock open" blip
