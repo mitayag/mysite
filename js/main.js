@@ -25,6 +25,82 @@
   const LEADERBOARD_TABLE = "leaderboard";
   const LEADERBOARD_READY = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR-ANON");
 
+  /* ---------- Sound effects (Web Audio — no files needed) ---------- */
+  const Sound = (() => {
+    let ctx = null;
+    let muted = false;
+    try { muted = localStorage.getItem("soundMuted") === "1"; } catch (e) {}
+
+    function ensureCtx() {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      if (!ctx) ctx = new AC();
+      if (ctx.state === "suspended") ctx.resume();
+      return ctx;
+    }
+
+    function tone(freq, dur, type, vol, when, slideTo) {
+      const c = ensureCtx();
+      if (!c) return;
+      const t = c.currentTime + (when || 0);
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.type = type || "square";
+      o.frequency.setValueAtTime(freq, t);
+      if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g);
+      g.connect(c.destination);
+      o.start(t);
+      o.stop(t + dur + 0.03);
+    }
+
+    const FX = {
+      type()  { tone(820, 0.025, "square", 0.05); },
+      click() { tone(660, 0.05, "square", 0.1); },
+      crack() { tone(1100, 0.05, "square", 0.13); tone(1500, 0.06, "square", 0.09, 0.05); },
+      trap()  { tone(150, 0.16, "sawtooth", 0.16, 0, 80); },
+      grant() { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, "square", 0.12, i * 0.09)); },
+      hack()  { tone(160, 0.6, "sawtooth", 0.13, 0, 36); tone(900, 0.22, "square", 0.1, 0.45); },
+      win()   { [659, 784, 1047, 1319].forEach((f, i) => tone(f, 0.22, "triangle", 0.16, i * 0.12)); },
+      fail()  { tone(240, 0.12, "sawtooth", 0.13, 0, 120); tone(180, 0.16, "sawtooth", 0.11, 0.1, 90); },
+      deny()  { tone(320, 0.09, "square", 0.11); tone(240, 0.12, "square", 0.11, 0.09); },
+    };
+
+    function play(name) {
+      if (muted || !FX[name]) return;
+      try { FX[name](); } catch (e) {}
+    }
+
+    function setMuted(m) {
+      muted = m;
+      try { localStorage.setItem("soundMuted", m ? "1" : "0"); } catch (e) {}
+    }
+    function isMuted() { return muted; }
+
+    return { play, setMuted, isMuted, ensureCtx };
+  })();
+
+  // Browsers block audio until the first user gesture — resume on first tap/key
+  ["pointerdown", "keydown"].forEach((ev) =>
+    window.addEventListener(ev, () => Sound.ensureCtx(), { once: true, passive: true })
+  );
+
+  const soundToggle = document.getElementById("soundToggle");
+  function updateSoundIcon() {
+    if (soundToggle) soundToggle.textContent = Sound.isMuted() ? "🔇" : "🔊";
+  }
+  if (soundToggle) {
+    updateSoundIcon();
+    soundToggle.addEventListener("click", () => {
+      Sound.ensureCtx();
+      Sound.setMuted(!Sound.isMuted());
+      updateSoundIcon();
+    });
+  }
+
   /* ---------- Rotating hero roles (EDIT ME) ---------- */
   const ROLES = [
     "Dean, School of Computing @ Holy Angel University",
@@ -148,6 +224,7 @@
     bootlog.appendChild(line);
     for (let i = 0; i < text.length; i++) {
       txt.textContent = text.slice(0, i + 1);
+      Sound.play("type");
       await sleep(11);
     }
     cur.remove();
@@ -208,6 +285,7 @@
     if (!node) return;
     if (node.classList.contains("target")) {
       game.cracks++;
+      Sound.play("crack");
       node.classList.remove("target", "trap");
       node.classList.add("cracked");
       node.textContent = "✓";
@@ -221,6 +299,7 @@
       }
       render();
     } else if (node.classList.contains("trap")) {
+      Sound.play("trap");
       node.classList.remove("trap");
       node.classList.add("shake");
       gameStatus.textContent = "ACCESS DENIED — trap node";
@@ -246,6 +325,7 @@
       if (playArea) playArea.hidden = true;
 
       const begin = () => {
+        Sound.play("click");
         if (intro) intro.hidden = true;
         if (playArea) playArea.hidden = false;
         bootlog.style.display = "none"; // collapse the log so the game box stays compact
@@ -285,6 +365,7 @@
       if (gamePanel && nodeGrid) {
         await playGame();
       }
+      Sound.play("grant");
       bootlog.style.display = ""; // bring the log back for the "ACCESS GRANTED" lines
       for (const step of WIN_LINES) {
         await typeLine(step.t, step.c);
@@ -293,6 +374,7 @@
       // Full-screen "PC hacked" effect before the whoami window appears
       if (hackOverlay) {
         hackOverlay.hidden = false;
+        Sound.play("hack");
         await sleep(1800);
         hackOverlay.hidden = true;
       } else {
@@ -520,10 +602,14 @@
           ctfSolved++;
           if (ctfScore) ctfScore.textContent = ctfSolved + "/" + CHALLENGES.length;
           if (ctfSolved === CHALLENGES.length) {
+            Sound.play("win");
             if (ctfWin) ctfWin.hidden = false;
             finishCtf();
+          } else {
+            Sound.play("crack");
           }
         } else {
+          Sound.play("fail");
           feedback.textContent = "✕ Incorrect — try again.";
           feedback.className = "ctf-feedback err";
           card.classList.add("shake");
@@ -626,6 +712,7 @@
   const lockBackdrop = lockModal ? lockModal.querySelector(".lock-modal-backdrop") : null;
 
   function showLockModal() {
+    Sound.play("deny");
     if (lockModal) lockModal.hidden = false;
   }
   function hideLockModal() {
