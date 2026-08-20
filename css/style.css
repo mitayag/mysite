@@ -622,7 +622,7 @@ b, strong { color: #fff; font-weight: 600; }
 
 /* Fake brute-force progress bar */
 .hack-progress {
-  margin: 4px 0 10px; height: 10px; border-radius: 6px;
+  margin: 4px auto 10px; height: 10px; border-radius: 6px;
   background: var(--line-soft); overflow: hidden; max-width: 420px;
 }
 .hack-progress .hack-bar {
@@ -669,21 +669,38 @@ html.js .hero-card.revealed {
 /* ---------- Firewall mini-game ---------- */
 .hack-game {
   font-family: var(--font-mono);
-  padding: 4px 0 6px;
+  padding: 6px 0 10px;
+  text-align: center;
 }
-.hack-game-head { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.hack-game-intro {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px; padding: 8px 0 4px;
+}
+.hacker-img {
+  display: block; margin: 0 auto;
+  filter: drop-shadow(0 0 20px rgba(34, 211, 238, .35));
+  animation: hackerFloat 3.4s ease-in-out infinite;
+}
+@keyframes hackerFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+.hack-game-head {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 5px; max-width: 460px; margin: 0 auto;
+}
 .hack-game-title {
   color: var(--danger); font-weight: 700;
   letter-spacing: .08em; font-size: .95rem;
   text-shadow: 0 0 14px rgba(248, 113, 113, .4);
 }
-.hack-game-sub { color: var(--muted); font-size: .78rem; }
+.hack-game-sub { color: var(--muted); font-size: .8rem; line-height: 1.6; }
 .hack-game-sub b { color: var(--ok); }
 .hack-game-sub b:last-of-type { color: var(--danger); }
 
 .node-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px; max-width: 300px; margin: 4px 0 16px;
+  gap: 10px; max-width: 300px; margin: 4px auto 16px;
 }
 .node {
   aspect-ratio: 1;
@@ -729,6 +746,11 @@ html.js .hero-card.revealed {
 }
 .hack-game-status.ok { color: var(--ok); }
 .hack-game-status.denied { color: var(--danger); }
+
+/* While the game is playing, collapse the two-column hero so the
+   terminal is centered and balanced (no empty right column). */
+.hero-grid.game-on { grid-template-columns: 1fr; }
+.hero-grid.game-on .terminal { max-width: 640px; width: 100%; margin: 0 auto; }
 
 /* ---------- Full-screen "PC hacked" effect ---------- */
 .hack-overlay[hidden] { display: none; }

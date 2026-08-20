@@ -117,6 +117,7 @@
   const gameStatus = document.getElementById("gameStatus");
   const hackOverlay = document.getElementById("hackOverlay");
   const heroCard = document.getElementById("heroCard");
+  const heroGrid = document.querySelector(".hero-grid");
   let booting = false;
 
   const NODES = 9;
@@ -138,83 +139,111 @@
     cur.remove();
   }
 
-  /* The mini-game: tap the glowing green nodes (crack the firewall),
-     avoid the red traps. Resolves when enough nodes are cracked. */
+  /* ---------- Firewall mini-game ----------
+     Step 1: show an intro (hacker avatar + instructions + "Initiate breach").
+     Step 2: tap the glowing green nodes to crack the firewall, avoid the red
+     traps. Resolves when enough nodes are cracked. */
+  const game = { nodes: [], cracks: 0, resolve: null };
+
+  function buildNodes() {
+    nodeGrid.innerHTML = "";
+    game.nodes = [];
+    for (let i = 0; i < NODES; i++) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "node idle";
+      b.setAttribute("aria-label", "Firewall node " + (i + 1));
+      game.nodes.push(b);
+      nodeGrid.appendChild(b);
+    }
+  }
+
+  function setBar() {
+    gameBar.style.width = Math.round((game.cracks / CRACKS_TO_WIN) * 100) + "%";
+    gameStatus.textContent =
+      game.cracks >= CRACKS_TO_WIN
+        ? "firewall bypassed!"
+        : "breach progress " + game.cracks + "/" + CRACKS_TO_WIN;
+    gameStatus.className = "hack-game-status";
+  }
+
+  function render() {
+    game.nodes.forEach((n) => {
+      if (!n.classList.contains("cracked")) {
+        n.className = "node idle";
+        n.textContent = "";
+      }
+    });
+    const idle = game.nodes.filter((n) => !n.classList.contains("cracked"));
+    if (game.cracks >= CRACKS_TO_WIN) return;
+    const target = idle[Math.floor(Math.random() * idle.length)];
+    target.classList.add("target");
+    target.textContent = "●";
+    const rest = idle.filter((n) => n !== target);
+    if (rest.length) {
+      const trap = rest[Math.floor(Math.random() * rest.length)];
+      trap.classList.add("trap");
+      trap.textContent = "✕";
+    }
+    setBar();
+  }
+
+  nodeGrid.addEventListener("click", (e) => {
+    if (!game.resolve) return;
+    const node = e.target.closest(".node");
+    if (!node) return;
+    if (node.classList.contains("target")) {
+      game.cracks++;
+      node.classList.remove("target", "trap");
+      node.classList.add("cracked");
+      node.textContent = "✓";
+      node.setAttribute("aria-label", "Cracked");
+      if (game.cracks >= CRACKS_TO_WIN) {
+        setBar();
+        const done = game.resolve;
+        game.resolve = null;
+        done();
+        return;
+      }
+      render();
+    } else if (node.classList.contains("trap")) {
+      node.classList.remove("trap");
+      node.classList.add("shake");
+      gameStatus.textContent = "ACCESS DENIED — trap node";
+      gameStatus.className = "hack-game-status denied";
+      setTimeout(() => {
+        node.classList.remove("shake");
+        render();
+      }, 350);
+    }
+  });
+
   function playGame() {
     return new Promise((resolve) => {
-      const nodes = [];
-      let cracks = 0;
+      const intro = document.getElementById("hackIntro");
+      const playArea = document.getElementById("hackPlay");
+      const startBtn = document.getElementById("startGameBtn");
+
+      game.cracks = 0;
+      game.resolve = resolve;
 
       gamePanel.hidden = false;
-      nodeGrid.innerHTML = "";
-      for (let i = 0; i < NODES; i++) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "node idle";
-        b.setAttribute("aria-label", "Firewall node " + (i + 1));
-        nodes.push(b);
-        nodeGrid.appendChild(b);
-      }
+      if (intro) intro.hidden = false;
+      if (playArea) playArea.hidden = true;
 
-      function setBar() {
-        gameBar.style.width = Math.round((cracks / CRACKS_TO_WIN) * 100) + "%";
-        gameStatus.textContent =
-          cracks >= CRACKS_TO_WIN
-            ? "firewall bypassed!"
-            : "breach progress " + cracks + "/" + CRACKS_TO_WIN;
-        gameStatus.className = "hack-game-status";
-      }
-
-      function render() {
-        nodes.forEach((n) => {
-          if (!n.classList.contains("cracked")) {
-            n.className = "node idle";
-            n.textContent = "";
-          }
-        });
-        const idle = nodes.filter((n) => !n.classList.contains("cracked"));
-        if (cracks >= CRACKS_TO_WIN) return;
-        const target = idle[Math.floor(Math.random() * idle.length)];
-        target.classList.add("target");
-        target.textContent = "●";
-        const rest = idle.filter((n) => n !== target);
-        if (rest.length) {
-          const trap = rest[Math.floor(Math.random() * rest.length)];
-          trap.classList.add("trap");
-          trap.textContent = "✕";
-        }
+      const begin = () => {
+        if (intro) intro.hidden = true;
+        if (playArea) playArea.hidden = false;
+        buildNodes();
         setBar();
+        render();
+      };
+
+      if (startBtn) {
+        startBtn.addEventListener("click", begin, { once: true });
+      } else {
+        begin();
       }
-
-      nodeGrid.addEventListener("click", (e) => {
-        const node = e.target.closest(".node");
-        if (!node) return;
-        if (node.classList.contains("target")) {
-          cracks++;
-          node.classList.remove("target", "trap");
-          node.classList.add("cracked");
-          node.textContent = "✓";
-          node.setAttribute("aria-label", "Cracked");
-          if (cracks >= CRACKS_TO_WIN) {
-            setBar();
-            resolve();
-            return;
-          }
-          render();
-        } else if (node.classList.contains("trap")) {
-          node.classList.remove("trap");
-          node.classList.add("shake");
-          gameStatus.textContent = "ACCESS DENIED — trap node";
-          gameStatus.className = "hack-game-status denied";
-          setTimeout(() => {
-            node.classList.remove("shake");
-            render();
-          }, 350);
-        }
-      });
-
-      setBar();
-      render();
     });
   }
 
@@ -226,6 +255,7 @@
     bootlog.innerHTML = "";
     heroReveal.classList.remove("revealed");
     if (heroCard) heroCard.classList.remove("revealed");
+    if (heroGrid) heroGrid.classList.add("game-on");
     stopTyper();
     if (gamePanel) gamePanel.hidden = true;
     if (hackOverlay) hackOverlay.hidden = true;
@@ -258,6 +288,7 @@
     bootlog.style.display = "none";
     if (gamePanel) gamePanel.hidden = true;
     if (terminal) terminal.classList.remove("boot-running");
+    if (heroGrid) heroGrid.classList.remove("game-on");
     heroReveal.classList.add("revealed");
     if (heroCard) heroCard.classList.add("revealed");
     startTyper();

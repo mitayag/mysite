@@ -73,13 +73,19 @@
         <div class="terminal-body">
           <div class="bootlog" id="bootlog" aria-hidden="true"></div>
           <div class="hack-game" id="hackGame" hidden>
-            <div class="hack-game-head">
-              <span class="hack-game-title">⚠ FIREWALL DETECTED</span>
-              <span class="hack-game-sub">tap the glowing <b>green</b> nodes to breach · avoid the <b>red</b> traps</span>
+            <div class="hack-game-intro" id="hackIntro">
+              <img class="hacker-img" src="assets/hacker.svg" alt="Hacker at work" width="104" height="104">
+              <div class="hack-game-head">
+                <span class="hack-game-title">⚠ SECURITY BREACH IN PROGRESS</span>
+                <span class="hack-game-sub">A firewall is blocking access. Tap the glowing <b>green</b> nodes (crack 6) and avoid the <b>red</b> traps.</span>
+              </div>
+              <button class="btn btn-primary" id="startGameBtn" type="button">Initiate breach <span class="arrow">→</span></button>
             </div>
-            <div class="node-grid" id="nodeGrid" aria-label="Firewall breach game"></div>
-            <div class="hack-progress"><span class="hack-bar" id="gameBar"></span></div>
-            <p class="hack-game-status" id="gameStatus">breach progress 0/6</p>
+            <div class="hack-game-play" id="hackPlay" hidden>
+              <div class="node-grid" id="nodeGrid" aria-label="Firewall breach game"></div>
+              <div class="hack-progress"><span class="hack-bar" id="gameBar"></span></div>
+              <p class="hack-game-status" id="gameStatus">breach progress 0/6</p>
+            </div>
           </div>
           <div class="hero-reveal" id="heroReveal">
             <p><span class="prompt">$</span> whoami</p>
