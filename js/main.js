@@ -3,6 +3,7 @@
    ------------------------------------------------------------
    EASY EDITS:
    - Rotating hero roles: edit the ROLES array below.
+   - "Hack" boot animation lines: edit the BOOT array below.
    - Contact form: it composes an email via mailto: (no backend).
      To use a form service instead, see README "Contact form".
    ============================================================ */
@@ -18,6 +19,21 @@
     "Mobile (Flutter) · Web (PHP) · Desktop (.NET / C#)",
     "Cisco Academy Instructor · CCNA · CEH",
   ];
+
+  /* ---------- "Hack" boot sequence lines (EDIT ME) ----------
+     c: optional class  (ok | fail | granted)
+     bar: true → show a fake brute-force progress bar after the line */
+  const BOOT = [
+    { t: "$ ./init.sh --target marlontayag.io" },
+    { t: "[+] establishing encrypted link ............. OK", c: "ok" },
+    { t: "[+] scanning ports 1..65535 ................ 22 · 80 · 443 open" },
+    { t: "[+] fingerprinting host .................... Holy Angel University" },
+    { t: "[+] brute-forcing credentials", bar: true },
+    { t: "[+] decrypting profile.dat ................. 100%", c: "ok" },
+    { t: "ACCESS GRANTED — identity: MARLON I. TAYAG", c: "granted" },
+  ];
+
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   /* ---------- Footer year ---------- */
   const yearEl = document.getElementById("year");
@@ -50,34 +66,116 @@
     });
   }
 
-  /* ---------- Typewriter effect ---------- */
-  const typer = document.getElementById("typer");
-  if (typer) {
-    let roleIdx = 0, charIdx = 0, deleting = false;
-    const SPEED = 55, DELAY = 1600;
+  /* ---------- Typewriter effect (started after the boot sequence) ---------- */
+  const typerEl = document.getElementById("typer");
+  let typerTimer = null;
+  let roleIdx = 0, charIdx = 0, deleting = false;
 
+  function stopTyper() {
+    if (typerTimer) clearTimeout(typerTimer);
+    typerTimer = null;
+    roleIdx = 0; charIdx = 0; deleting = false;
+    if (typerEl) typerEl.textContent = "";
+  }
+
+  function startTyper() {
+    if (!typerEl) return;
+    const SPEED = 55, DELAY = 1600;
     function tick() {
       const current = ROLES[roleIdx];
       if (!deleting) {
         charIdx++;
-        typer.textContent = current.slice(0, charIdx);
+        typerEl.textContent = current.slice(0, charIdx);
         if (charIdx === current.length) {
           deleting = true;
-          setTimeout(tick, DELAY);
+          typerTimer = setTimeout(tick, DELAY);
           return;
         }
-        setTimeout(tick, SPEED);
+        typerTimer = setTimeout(tick, SPEED);
       } else {
         charIdx--;
-        typer.textContent = current.slice(0, charIdx);
+        typerEl.textContent = current.slice(0, charIdx);
         if (charIdx === 0) {
           deleting = false;
           roleIdx = (roleIdx + 1) % ROLES.length;
         }
-        setTimeout(tick, SPEED / 2);
+        typerTimer = setTimeout(tick, SPEED / 2);
       }
     }
     tick();
+  }
+
+  /* ---------- "Hack" boot sequence ---------- */
+  const bootlog = document.getElementById("bootlog");
+  const heroReveal = document.getElementById("heroReveal");
+  const terminal = document.querySelector(".terminal");
+  const replayBtn = document.getElementById("replayBtn");
+  let booting = false;
+
+  async function typeLine(text, cls) {
+    const line = document.createElement("div");
+    line.className = "line" + (cls ? " " + cls : "");
+    const txt = document.createElement("span");
+    const cur = document.createElement("span");
+    cur.className = "cursor";
+    line.appendChild(txt);
+    line.appendChild(cur);
+    bootlog.appendChild(line);
+    for (let i = 0; i < text.length; i++) {
+      txt.textContent = text.slice(0, i + 1);
+      await sleep(11);
+    }
+    cur.remove();
+  }
+
+  async function runBoot() {
+    if (booting || !bootlog || !heroReveal) return;
+    booting = true;
+
+    bootlog.style.display = "";
+    bootlog.innerHTML = "";
+    heroReveal.classList.remove("revealed");
+    stopTyper();
+    if (terminal) terminal.classList.add("boot-running");
+
+    try {
+      for (const step of BOOT) {
+        await typeLine(step.t, step.c);
+        if (step.bar) {
+          const wrap = document.createElement("div");
+          wrap.className = "hack-progress";
+          const bar = document.createElement("span");
+          bar.className = "hack-bar";
+          wrap.appendChild(bar);
+          bootlog.appendChild(wrap);
+          await sleep(60);
+          bar.style.width = "100%";
+          await sleep(900);
+        }
+        await sleep(160);
+      }
+      await sleep(650);
+    } catch (e) {
+      /* never leave the hero hidden if something breaks */
+    }
+
+    bootlog.style.display = "none";
+    if (terminal) terminal.classList.remove("boot-running");
+    heroReveal.classList.add("revealed");
+    startTyper();
+    booting = false;
+  }
+
+  if (bootlog && heroReveal) {
+    runBoot();
+    if (replayBtn) {
+      replayBtn.addEventListener("click", () => {
+        if (!booting) runBoot();
+      });
+    }
+  } else if (heroReveal) {
+    heroReveal.classList.add("revealed");
+    startTyper();
   }
 
   /* ---------- Scroll reveal ---------- */

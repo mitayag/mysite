@@ -230,6 +230,7 @@ b, strong { color: #fff; font-weight: 600; }
 
 /* Terminal window */
 .terminal {
+  position: relative;
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: rgba(10, 15, 28, .9);
@@ -581,4 +582,79 @@ b, strong { color: #fff; font-weight: 600; }
   .nav-toggle { display: block; }
   .form-row { grid-template-columns: 1fr; }
   .footer-inner { flex-direction: column; }
+}
+
+/* ============================================================
+   HERO "HACK" BOOT ANIMATION
+   ============================================================ */
+
+/* Replay button (top-right of the terminal bar) */
+.replay-btn {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: .74rem;
+  color: var(--muted-2); background: none;
+  border: 1px solid var(--line); border-radius: 7px;
+  padding: 4px 10px; cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.replay-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Boot log — the fake "hacking" lines typed on load */
+.bootlog {
+  font-family: var(--font-mono);
+  font-size: .88rem; line-height: 1.9;
+  color: var(--accent);
+  min-height: 320px;
+}
+.bootlog .line { white-space: pre-wrap; word-break: break-word; }
+.bootlog .line.ok { color: var(--ok); }
+.bootlog .line.fail { color: var(--danger); }
+.bootlog .line.granted {
+  color: var(--ok); font-weight: 700;
+  text-shadow: 0 0 16px rgba(52, 211, 153, .6);
+}
+.bootlog .cursor {
+  display: inline-block; width: 8px; height: 1.05em;
+  background: var(--accent); vertical-align: text-bottom;
+  animation: blink .9s steps(1) infinite;
+}
+
+/* Fake brute-force progress bar */
+.hack-progress {
+  margin: 4px 0 10px; height: 10px; border-radius: 6px;
+  background: var(--line-soft); overflow: hidden; max-width: 420px;
+}
+.hack-progress .hack-bar {
+  display: block; height: 100%; width: 0;
+  background: var(--grad); box-shadow: 0 0 12px rgba(34, 211, 238, .5);
+  transition: width .85s ease;
+}
+
+/* Hero content is hidden until the boot sequence "grants access" */
+html.js .hero-reveal { opacity: 0; }
+.hero-reveal { transition: opacity .35s ease; }
+.hero-reveal.revealed { opacity: 1; }
+.hero-reveal.revealed .hero-name {
+  animation: glitchIn .7s steps(9) both;
+}
+@keyframes glitchIn {
+  0%   { clip-path: inset(0 0 100% 0); transform: translateX(0); }
+  25%  { clip-path: inset(0); transform: translateX(-6px); }
+  45%  { clip-path: inset(8% 0 8% 0); transform: translateX(6px); }
+  70%  { clip-path: inset(0); transform: translateX(-3px); }
+  100% { clip-path: inset(0); transform: translateX(0); }
+}
+
+/* Moving scanline across the terminal while "hacking" */
+.terminal.boot-running::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, .55), transparent);
+  top: 0; pointer-events: none;
+  animation: scan 2.2s linear infinite;
+}
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+@media (max-width: 720px) {
+  .replay-btn span { display: none; }
+  .bootlog { min-height: 300px; }
 }

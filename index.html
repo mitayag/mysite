@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>document.documentElement.classList.add('js');</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Marlon I. Tayag — Dean, School of Computing · Teacher / Programmer / Developer</title>
@@ -58,18 +59,22 @@
         <div class="terminal-bar">
           <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
           <span class="terminal-title">marlon@tayag: ~/whoami</span>
+          <button class="replay-btn" id="replayBtn" type="button" title="Replay hack sequence" aria-label="Replay hack sequence">⟳ <span>Replay</span></button>
         </div>
         <div class="terminal-body">
-          <p><span class="prompt">$</span> whoami</p>
-          <h1 class="hero-name">MARLON&nbsp;I.&nbsp;TAYAG</h1>
-          <p><span class="prompt">$</span> cat roles.txt</p>
-          <p class="typed-line"><span id="typer"></span><span class="caret" aria-hidden="true"></span></p>
-          <p><span class="prompt">$</span> uptime <span class="muted">— teaching, coding &amp; shipping since 1994</span></p>
-          <p><span class="prompt">$</span> <span class="comment"># scan the QR below to save my contact card</span></p>
-          <p class="hero-actions">
-            <a class="btn btn-primary" href="#contact">Let's talk <span class="arrow">&rarr;</span></a>
-            <a class="btn btn-ghost" href="cv/CV%20Marlon%20Tayag.pdf" download>Download CV</a>
-          </p>
+          <div class="bootlog" id="bootlog" aria-hidden="true"></div>
+          <div class="hero-reveal" id="heroReveal">
+            <p><span class="prompt">$</span> whoami</p>
+            <h1 class="hero-name">MARLON&nbsp;I.&nbsp;TAYAG</h1>
+            <p><span class="prompt">$</span> cat roles.txt</p>
+            <p class="typed-line"><span id="typer"></span><span class="caret" aria-hidden="true"></span></p>
+            <p><span class="prompt">$</span> uptime <span class="muted">— teaching, coding &amp; shipping since 1994</span></p>
+            <p><span class="prompt">$</span> <span class="comment"># scan the QR below to save my contact card</span></p>
+            <p class="hero-actions">
+              <a class="btn btn-primary" href="#contact">Let's talk <span class="arrow">&rarr;</span></a>
+              <a class="btn btn-ghost" href="cv/CV%20Marlon%20Tayag.pdf" download>Download CV</a>
+            </p>
+          </div>
         </div>
       </div>
 
