@@ -101,6 +101,12 @@
       fail()  { tone(340, 0.1, "sine", 0.12); tone(226, 0.16, "sine", 0.12, 0.09); },
       // access denied
       deny()  { tone(392, 0.1, "square", 0.1); tone(311, 0.14, "square", 0.1, 0.1); },
+      // winners fanfare
+      celebrate() {
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, 0.15, "triangle", 0.15, i * 0.08));
+        [1046.5, 1318.5, 1568].forEach((f, i) => tone(f, 0.22, "sine", 0.13, 0.34 + i * 0.09));
+        tone(2093, 0.5, "sine", 0.1, 0.62);
+      },
     };
 
     function play(name) {
@@ -814,11 +820,69 @@
     podium.innerHTML = html;
   }
 
+  /* ---------- Confetti shower (canvas) ---------- */
+  function launchConfetti() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("aria-hidden", "true");
+    Object.assign(canvas.style, {
+      position: "fixed", inset: "0", zIndex: "1200",
+      pointerEvents: "none", width: "100%", height: "100%",
+    });
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const w = canvas.width, h = canvas.height;
+
+    const colors = ["#22d3ee", "#a78bfa", "#fbbf24", "#34d399", "#f472b6", "#f87171", "#ffffff"];
+    const parts = [];
+    for (let i = 0; i < 170; i++) {
+      parts.push({
+        x: Math.random() * w,
+        y: -20 - Math.random() * h * 0.5,
+        pw: 6 + Math.random() * 6,
+        ph: 10 + Math.random() * 8,
+        color: colors[(Math.random() * colors.length) | 0],
+        vy: 2 + Math.random() * 3.5,
+        vx: -1.5 + Math.random() * 3,
+        rot: Math.random() * Math.PI,
+        spin: -0.15 + Math.random() * 0.3,
+      });
+    }
+
+    let frame = 0;
+    const MAX_FRAMES = 260; // ~4s
+    function step() {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of parts) {
+        p.x += p.vx + Math.sin(p.rot) * 1.2;
+        p.y += p.vy;
+        p.rot += p.spin;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.pw / 2, -p.ph / 2, p.pw, p.ph);
+        ctx.restore();
+      }
+      frame++;
+      if (frame < MAX_FRAMES && parts.some((p) => p.y < h + 40)) {
+        requestAnimationFrame(step);
+      } else {
+        canvas.remove();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
   function openWinners() {
     if (!winnersModal) return;
     renderPodium();
     winnersModal.hidden = false;
     document.body.style.overflow = "hidden";
+    Sound.play("celebrate");
+    launchConfetti();
   }
 
   function closeWinners() {
