@@ -2,6 +2,7 @@ BEGIN:VCARD
 VERSION:3.0
 N:Tayag;Marlon;;;
 FN:Marlon I. Tayag
+PHOTO;VALUE=URI:https://www.marlontayag.io/images/mtayag.png
 ORG:Holy Angel University
 TITLE:Dean, School of Computing | Teacher / Programmer / Web App & Mobile Developer
 TEL;TYPE=CELL:+639978254419
