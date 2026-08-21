@@ -338,13 +338,6 @@ b, strong { color: #fff; font-weight: 600; }
 
 /* ---------- About ---------- */
 .about-grid { grid-template-columns: 1.25fr .75fr; align-items: start; }
-.about-avatar { display: flex; justify-content: center; margin-bottom: 18px; }
-.about-avatar img {
-  width: 150px; height: 150px; border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(34, 211, 238, .5);
-  box-shadow: 0 0 0 5px rgba(34, 211, 238, .12), 0 14px 34px rgba(0, 0, 0, .45);
-}
 .about-story p { margin-bottom: 14px; color: var(--muted); }
 .about-family { font-size: .94rem; }
 
